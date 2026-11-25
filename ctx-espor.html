@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTX | CT E-SPOR Akademisi — Aim Lab, Sesli Taktik & Testler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Rubik+Spray+Paint&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #06070c;
+      --bg-panel: #0d1018;
+      --bg-card: #131826;
+      --border: #232b42;
+      --cyan: #00f5d4;
+      --pink: #ff2a6d;
+      --yellow: #fcee0a;
+      --purple: #9b5de5;
+      --green: #38ff7a;
+      --text: #eef2ff;
+      --muted: #8b96b8;
+      --font-ui: 'Rajdhani', system-ui, -apple-system, sans-serif;
+      --font-tech: 'Orbitron', 'Impact', sans-serif;
+      --font-graffiti: 'Rubik Spray Paint', 'Permanent Marker', 'Impact', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: var(--font-ui);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255, 42, 109, 0.08), transparent 35%),
+        radial-gradient(circle at 88% 12%, rgba(0, 245, 212, 0.09), transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(155, 93, 229, 0.08), transparent 45%),
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #293350; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+    /* AUTH GATE SCREEN */
+    #authGate {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    #authGate.hidden { display: none; }
+
+    .auth-box {
+      width: 100%;
+      max-width: 470px;
+      background: linear-gradient(160deg, #0e121e, #090c14);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78), 0 0 36px rgba(0, 245, 212, 0.08);
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .auth-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 9px;
+      font-family: var(--font-tech);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .auth-tab.active {
+      background: linear-gradient(135deg, rgba(0, 245, 212, 0.18), rgba(255, 42, 109, 0.16));
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    .auth-field { margin-bottom: 13px; }
+    .auth-field label {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .auth-field input, .auth-field select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #06080f;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .auth-field input:focus, .auth-field select:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 12px rgba(0, 245, 212, 0.18);
+    }
+
+    .auth-msg {
+      min-height: 22px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .auth-msg.err { color: var(--pink); }
+    .auth-msg.ok { color: var(--green); }
+
+    .vault-lock-box {
+      background: rgba(255, 42, 109, 0.06);
+      border: 1px dashed var(--pink);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    #appShell.hidden { display: none; }
+
+    /* HEADER & NAV */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6, 7, 12, 0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mini { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+
+    .ctx-badge {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: #fff;
+      font-family: var(--font-tech);
+      font-weight: 900;
+      font-size: 1.12rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      letter-spacing: 2px;
+      box-shadow: 0 0 18px rgba(255, 42, 109, 0.45);
+      transform: skewX(-10deg);
+    }
+
+    .mini-graffiti {
+      font-family: var(--font-graffiti);
+      font-size: 1.45rem;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, var(--cyan), var(--yellow), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(2px 2px 0 #000) drop-shadow(0 0 8px rgba(0,245,212,0.35));
+      transform: rotate(-2deg);
+    }
+
+    nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .nav-btn {
+      background: var(--bg-card);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .nav-btn:hover { color: var(--text); border-color: var(--cyan); transform: translateY(-1px); }
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(0, 245, 212, 0.16), rgba(155, 93, 229, 0.18));
+      color: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 16px rgba(0, 245, 212, 0.2);
+    }
+
+    .xp-widget {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 10px;
+    }
+    .xp-rank { font-family: var(--font-tech); font-size: 0.76rem; color: var(--yellow); font-weight: 800; }
+    .xp-bar-wrap { width: 95px; height: 7px; background: #080a10; border-radius: 99px; overflow: hidden; border: 1px solid #262f48; }
+    .xp-bar-fill { height: 100%; width: 10%; background: linear-gradient(90deg, var(--cyan), var(--yellow)); transition: width 0.4s ease; }
+
+    main { max-width: 1440px; margin: 0 auto; padding: 22px 20px 60px; }
+    .section { display: none; animation: fadeIn 0.22s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hero-mural {
+      position: relative;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(0, 245, 212, 0.14), transparent 48%),
+        radial-gradient(circle at 78% 45%, rgba(255, 42, 109, 0.16), transparent 50%),
+        linear-gradient(135deg, #0b0e17 0%, #14192b 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px 24px 30px;
+      overflow: hidden;
+      margin-bottom: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+    .hero-mural::before {
+      content: "CTX // CT E-SPOR ACADEMY // AIM LAB PRO // VOICE TACTICS // QUIZ";
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      font-family: var(--font-tech);
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.18);
+    }
+
+    .graffiti-wrapper { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .graffiti-svg { width: 100%; max-width: 780px; height: auto; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.8)); user-select: none; }
+    .hero-sub { max-width: 780px; color: #c2cbe6; font-size: 1.1rem; line-height: 1.55; margin-top: 4px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+
+    .btn-primary, .btn-secondary, .btn-danger, .btn-gold {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 1.02rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--cyan), #00b4d8); color: #05070d; box-shadow: 0 0 20px rgba(0, 245, 212, 0.32); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(0, 245, 212, 0.55); }
+    .btn-gold { background: linear-gradient(135deg, var(--yellow), #f59e0b); color: #05070d; box-shadow: 0 0 18px rgba(252, 238, 10, 0.25); }
+    .btn-gold:hover { transform: translateY(-2px); }
+    .btn-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); }
+    .btn-danger { background: rgba(255, 42, 109, 0.18); color: var(--pink); border: 1px solid var(--pink); }
+    .btn-danger:hover { background: var(--pink); color: #fff; }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 18px; }
+
+    .card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; transition: border-color 0.2s, transform 0.2s; }
+    .card-hover:hover { border-color: var(--cyan); transform: translateY(-3px); }
+    .stat-card { background: linear-gradient(160deg, var(--bg-card), var(--bg-panel)); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .stat-label { color: var(--muted); font-size: 0.88rem; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-val { font-family: var(--font-tech); font-size: 1.85rem; font-weight: 800; margin-top: 5px; color: var(--cyan); }
+    .section-title { font-family: var(--font-tech); font-size: 1.25rem; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; letter-spacing: 1px; }
+    .tag-pill { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 700; background: rgba(0, 245, 212, 0.14); color: var(--cyan); border: 1px solid rgba(0, 245, 212, 0.35); }
+
+    /* AIM LAB */
+    .aim-controls-bar { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .mode-pills { display: flex; gap: 7px; flex-wrap: wrap; }
+    .mode-pill {
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--muted);
+      padding: 7px 12px; border-radius: 8px; cursor: pointer; font-family: var(--font-ui); font-weight: 700; font-size: 0.92rem; transition: all 0.2s;
+    }
+    .mode-pill:hover { color: #fff; border-color: var(--purple); }
+    .mode-pill.active { background: linear-gradient(135deg, rgba(255,42,109,0.22), rgba(155,93,229,0.22)); border-color: var(--pink); color: #fff; box-shadow: 0 0 14px rgba(255,42,109,0.25); }
+    .aim-settings-row { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .ctrl-group { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--muted); }
+
+    select, input[type="number"], input[type="text"], input[type="range"] {
+      background: var(--bg-dark); color: var(--text); border: 1px solid var(--border);
+      border-radius: 6px; padding: 5px 8px; font-family: var(--font-ui); font-weight: 600; font-size: 0.94rem;
+    }
+    select:focus, input:focus { outline: none; border-color: var(--cyan); }
+
+    .aim-hud { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 12px; }
+    .hud-box { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; text-align: center; }
+    .hud-box span { display: block; font-size: 0.76rem; color: var(--muted); text-transform: uppercase; }
+    .hud-box strong { font-family: var(--font-tech); font-size: 1.2rem; color: var(--cyan); }
+
+    .aim-stage-wrap { position: relative; background: #05070c; border: 2px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 0 40px rgba(0, 0, 0, 0.75); user-select: none; }
+    #aimCanvas { display: block; width: 100%; aspect-ratio: 1000 / 540; cursor: crosshair; }
+
+    .aim-overlay {
+      position: absolute; inset: 0; background: rgba(6, 8, 15, 0.88); backdrop-filter: blur(6px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; z-index: 10;
+    }
+    .aim-overlay.hidden { display: none; }
+
+    .report-card { background: var(--bg-panel); border: 1px solid var(--cyan); border-radius: 16px; padding: 20px 22px; max-width: 820px; width: 100%; box-shadow: 0 0 40px rgba(0, 245, 212, 0.2); }
+    .grade-badge { font-family: var(--font-tech); font-size: 2.8rem; font-weight: 900; background: linear-gradient(135deg, var(--yellow), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+    .report-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
+    .report-stat { background: var(--bg-card); padding: 8px; border-radius: 8px; border: 1px solid var(--border); }
+    .report-stat small { color: var(--muted); display: block; font-size: 0.76rem; }
+    .report-stat b { font-family: var(--font-tech); font-size: 1.1rem; color: #fff; }
+    .report-charts-row { display: grid; grid-template-columns: 1fr 165px; gap: 10px; margin-bottom: 10px; }
+
+    .crosshair-drawer { background: var(--bg-card); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px; margin-bottom: 14px; display: none; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .crosshair-drawer.open { display: flex; }
+    #crosshairPreview { background: #0a0e18; border: 1px solid var(--border); border-radius: 10px; width: 110px; height: 110px; }
+
+    /* TACTICS + VOICE BRIEFING + QUIZ */
+    .game-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .game-tab {
+      background: var(--bg-panel); border: 1px solid var(--border); color: var(--muted); padding: 11px 18px;
+      border-radius: 10px; cursor: pointer; font-family: var(--font-tech); font-size: 0.9rem; font-weight: 700; transition: all 0.2s;
+    }
+    .game-tab:hover { color: #fff; border-color: var(--cyan); }
+    .game-tab.active { background: linear-gradient(135deg, rgba(0,245,212,0.18), rgba(255,42,109,0.15)); color: #fff; border-color: var(--cyan); box-shadow: 0 0 18px rgba(0, 245, 212, 0.2); }
+
+    .tactics-top-split { display: grid; grid-template-columns: 1.55fr 1fr; gap: 16px; margin-bottom: 18px; align-items: stretch; }
+    .tactic-board-shell, .briefing-shell { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; }
+
+    .board-toolbar { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .tool-group { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+    .tool-btn {
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
+      padding: 5px 10px; border-radius: 7px; cursor: pointer; font-family: var(--font-ui); font-weight: 700; font-size: 0.88rem; transition: all 0.15s;
+    }
+    .tool-btn:hover { border-color: var(--cyan); }
+    .tool-btn.active { background: var(--cyan); color: #05070d; border-color: var(--cyan); }
+
+    #tacticCanvas { width: 100%; aspect-ratio: 960 / 500; background: #0a0f18; border: 1px solid var(--border); border-radius: 10px; display: block; cursor: crosshair; touch-action: none; }
+
+    .briefing-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+    .briefing-controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .briefing-status { font-size: 0.85rem; color: var(--cyan); margin-bottom: 8px; min-height: 20px; }
+    .briefing-steps { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 410px; padding-right: 4px; }
+    .brief-step { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--purple); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.2s; }
+    .brief-step:hover { border-color: var(--cyan); }
+    .brief-step.active-step { border-color: var(--cyan); border-left: 4px solid var(--yellow); background: rgba(0, 245, 212, 0.1); box-shadow: 0 0 16px rgba(0, 245, 212, 0.15); }
+    .brief-step h4 { font-family: var(--font-tech); font-size: 0.86rem; color: var(--yellow); margin-bottom: 4px; }
+    .brief-step p { font-size: 0.94rem; color: #dbe4ff; line-height: 1.4; }
+
+    .tactics-bottom-split { display: grid; grid-template-columns: 1.45fr 1fr; gap: 16px; align-items: start; }
+    .guides-stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .tactic-guide-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; border-top: 3px solid var(--cyan); }
+    .tactic-guide-card h3 { font-family: var(--font-tech); font-size: 0.98rem; color: var(--yellow); margin-bottom: 10px; }
+    .tactic-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .tactic-list li { background: rgba(255,255,255,0.025); border-left: 3px solid var(--pink); padding: 7px 10px; border-radius: 0 7px 7px 0; font-size: 0.94rem; line-height: 1.4; color: #d7e0f8; }
+    .tactic-list li strong { color: var(--cyan); }
+
+    .quiz-shell { background: linear-gradient(160deg, #101524, #0c101a); border: 1px solid var(--purple); border-radius: 14px; padding: 18px; box-shadow: 0 0 28px rgba(155, 93, 229, 0.14); }
+    .quiz-q { font-size: 1.06rem; font-weight: 700; line-height: 1.45; margin: 12px 0; color: #fff; }
+    .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-opt { text-align: left; background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 8px; cursor: pointer; font-family: var(--font-ui); font-size: 0.96rem; font-weight: 600; transition: all 0.15s; }
+    .quiz-opt:hover:not(:disabled) { border-color: var(--cyan); background: rgba(0,245,212,0.08); }
+    .quiz-opt.correct { border-color: var(--green); background: rgba(56,255,122,0.16); color: #fff; }
+    .quiz-opt.wrong { border-color: var(--pink); background: rgba(255,42,109,0.18); color: #fff; }
+    .quiz-exp { margin-top: 12px; padding: 10px 12px; background: rgba(0,245,212,0.08); border-left: 3px solid var(--cyan); border-radius: 0 8px 8px 0; font-size: 0.93rem; line-height: 1.42; }
+
+    /* TOOLS */
+    .reaction-box { height: 185px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-family: var(--font-tech); font-size: 1.3rem; font-weight: 800; user-select: none; border: 2px solid var(--border); text-align: center; padding: 16px; }
+    .reaction-idle { background: #141a2b; color: var(--cyan); }
+    .reaction-wait { background: #6b0f26; color: #fff; border-color: var(--pink); }
+    .reaction-go { background: #0b6e4f; color: #fff; border-color: var(--green); box-shadow: 0 0 30px rgba(56,255,122,0.45); }
+
+    .cps-pad { height: 155px; border-radius: 12px; background: linear-gradient(135deg, #131b2e, #1a1230); border: 2px dashed var(--purple); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; }
+    .cps-pad:active { transform: scale(0.98); border-color: var(--cyan); }
+
+    table.data-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.94rem; }
+    table.data-table th, table.data-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+    table.data-table th { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; }
+
+    .routine-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--bg-card); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; }
+    .routine-item.done { border-color: var(--green); opacity: 0.72; }
+
+    @media (max-width: 1080px) {
+      .tactics-top-split, .tactics-bottom-split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 820px) {
+      .aim-hud { grid-template-columns: repeat(3, 1fr); }
+      .report-grid { grid-template-columns: repeat(2, 1fr); }
+      .report-charts-row { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== GİZLİ KOD KORUMALI GİRİŞ & KAYIT KAPISI ==================== -->
+  <section id="authGate">
+    <div style="text-align:center; margin-bottom:18px; width:100%; max-width:560px">
+      <svg style="width:100%; max-width:460px; height:auto; filter:drop-shadow(0 8px 18px rgba(0,0,0,0.85))" viewBox="0 0 820 185" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="authGraf" x1="0%" y1="0%" x2="100%" y2="85%">
+            <stop offset="0%" stop-color="#fcee0a" />
+            <stop offset="50%" stop-color="#00f5d4" />
+            <stop offset="100%" stop-color="#ff2a6d" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-3 410 95)">
+          <text x="416" y="128" text-anchor="middle" style="font-family:'Rubik Spray Paint','Permanent Marker',Impact,sans-serif; font-size:94px; font-weight:900; letter-spacing:5px;" fill="#05060a" stroke="#05060a" stroke-width="18" stroke-linejoin="round">CT E-SPOR</text>
+          <text x="411" y="123" text-anchor="middle" style="font-family:'Rubik Spray Paint','Permanent Marker',Impact,sans-serif; font-size:94px; font-weight:900; letter-spacing:5px;" fill="#ff2a6d" stroke="#ff2a6d" stroke-width="12" stroke-linejoin="round">CT E-SPOR</text>
+          <text x="408" y="120" text-anchor="middle" style="font-family:'Rubik Spray Paint','Permanent Marker',Impact,sans-serif; font-size:94px; font-weight:900; letter-spacing:5px;" fill="url(#authGraf)">CT E-SPOR</text>
+          <path d="M165,121 Q169,144 165,156 Q161,144 162,121 Z" fill="#00f5d4"/>
+          <path d="M510,121 Q514,143 510,154 Q506,143 507,121 Z" fill="#ff2a6d"/>
+        </g>
+        <g transform="translate(310, 140)">
+          <rect x="0" y="0" width="200" height="32" rx="6" fill="#9b5de5" stroke="#05060a" stroke-width="3"/>
+          <text x="100" y="21" text-anchor="middle" fill="#fff" style="font-family:'Orbitron',sans-serif; font-size:14px; font-weight:900; letter-spacing:2px;">CTX ACADEMY</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="CTX.switchAuthTab('login')">🔐 Giriş Yap</button>
+        <button class="auth-tab" id="tabRegister" onclick="CTX.switchAuthTab('register')">🛡️ Hesap Oluştur</button>
+      </div>
+
+      <!-- GİRİŞ FORMU -->
+      <div id="authLoginPanel">
+        <div class="auth-field">
+          <label>Kullanıcı Adı</label>
+          <input type="text" id="loginUser" autocomplete="off" placeholder="Oyuncu adın" onkeydown="if(event.key==='Enter')CTX.handleLogin()" />
+        </div>
+        <div class="auth-field">
+          <label>Şifre</label>
+          <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')CTX.handleLogin()" />
+        </div>
+        <div class="auth-field">
+          <label>Akademi Erişim Kodu</label>
+          <input type="password" id="loginSecret" autocomplete="off" placeholder="••••••••" onkeydown="if(event.key==='Enter')CTX.handleLogin()" />
+        </div>
+        <div class="auth-msg err" id="loginMsg"></div>
+        <button class="btn-primary" style="width:100%" onclick="CTX.handleLogin()">▶ Akademiye Giriş Yap</button>
+      </div>
+
+      <!-- HESAP OLUŞTURMA PANELİ (KOD KİLİTLİ) -->
+      <div id="authRegisterPanel" style="display:none">
+        <!-- ADIM 1: KASA KİLİDİ -->
+        <div id="regVaultGate" class="vault-lock-box">
+          <div style="font-size:2rem; margin-bottom:6px">🔒</div>
+          <h3 style="font-family:var(--font-tech); font-size:1rem; color:var(--pink); margin-bottom:6px">KAYIT ALANI KİLİTLİ</h3>
+          <p style="color:var(--muted); font-size:0.92rem; margin-bottom:14px">
+            Hesap oluşturma bölümüne girmek için özel kayıt kodunu doğrulamalısın.
+          </p>
+          <div class="auth-field" style="text-align:left">
+            <label>Özel Kayıt Kodu</label>
+            <input type="password" id="regGateCode" autocomplete="off" placeholder="••••••••" onkeydown="if(event.key==='Enter')CTX.unlockRegisterGate()" />
+          </div>
+          <div class="auth-msg err" id="regGateMsg"></div>
+          <button class="btn-danger" style="width:100%" onclick="CTX.unlockRegisterGate()">🔓 Kilidi Aç</button>
+        </div>
+
+        <!-- ADIM 2: KİLİT AÇILINCA GELEN KAYIT FORMU -->
+        <div id="regFormUnlocked" style="display:none">
+          <div class="tag-pill" style="margin-bottom:10px; border-color:var(--green); color:var(--green)">🔓 Erişim Onaylandı — Yeni Üye Kaydı</div>
+          <div class="auth-field">
+            <label>Kullanıcı Adı (Min. 3 karakter)</label>
+            <input type="text" id="regUser" autocomplete="off" placeholder="Örn: CTX_Pro" />
+          </div>
+          <div class="auth-field">
+            <label>Ana Branşın</label>
+            <select id="regBranch">
+              <option value="Counter-Strike 2">Counter-Strike 2</option>
+              <option value="Fortnite">Fortnite</option>
+              <option value="Minecraft PvP">Minecraft PvP</option>
+              <option value="EA Sports FC">EA Sports FC</option>
+              <option value="eFootball">eFootball</option>
+            </select>
+          </div>
+          <div class="auth-field">
+            <label>Şifre (Min. 4 karakter)</label>
+            <input type="password" id="regPass" placeholder="••••••••" />
+          </div>
+          <div class="auth-field">
+            <label>Şifre Tekrar</label>
+            <input type="password" id="regPass2" placeholder="••••••••" onkeydown="if(event.key==='Enter')CTX.handleRegister()" />
+          </div>
+          <div class="auth-msg err" id="regMsg"></div>
+          <button class="btn-primary" style="width:100%" onclick="CTX.handleRegister()">✅ Hesabı Oluştur & Başla</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== AKADEMİ ANA UYGULAMA ==================== -->
+  <div id="appShell" class="hidden">
+    <header>
+      <div class="brand-mini" onclick="CTX.switchSection('sec-home')">
+        <div class="ctx-badge">CTX</div>
+        <div class="mini-graffiti">CT E-SPOR</div>
+      </div>
+
+      <nav>
+        <button class="nav-btn active" data-sec="sec-home" onclick="CTX.switchSection('sec-home')">🏠 Akademi Üssü</button>
+        <button class="nav-btn" data-sec="sec-aimlab" onclick="CTX.switchSection('sec-aimlab')">🎯 Gelişmiş Aim Lab</button>
+        <button class="nav-btn" data-sec="sec-tactics" onclick="CTX.switchSection('sec-tactics')">📋 Taktik, Sesli Koç & Testler</button>
+        <button class="nav-btn" data-sec="sec-tools" onclick="CTX.switchSection('sec-tools')">⚡ Pro Araçlar & Rutin</button>
+      </nav>
+
+      <div class="xp-widget">
+        <div>
+          <div style="font-size:0.78rem; color:var(--cyan); font-weight:700" id="uiUserNick">👤 OYUNCU</div>
+          <div class="xp-rank" id="uiRankName">ÇAYLAK I</div>
+          <div style="font-size:0.74rem; color:var(--muted)" id="uiXpText">0 XP</div>
+        </div>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" id="uiXpBar"></div></div>
+        <button class="tool-btn" style="border-color:var(--pink); color:var(--pink)" onclick="CTX.logout()" title="Çıkış Yap">🚪 Çıkış</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- ==================== 1. ANA ÜS ==================== -->
+      <section id="sec-home" class="section active">
+        <div class="hero-mural">
+          <div class="graffiti-wrapper">
+            <svg class="graffiti-svg" viewBox="0 0 820 205" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="grafFill" x1="0%" y1="0%" x2="100%" y2="85%">
+                  <stop offset="0%" stop-color="#fcee0a" />
+                  <stop offset="48%" stop-color="#00f5d4" />
+                  <stop offset="100%" stop-color="#ff2a6d" />
+                </linearGradient>
+                <linearGradient id="ctxTagFill" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ff2a6d" />
+                  <stop offset="100%" stop-color="#9b5de5" />
+                </linearGradient>
+                <filter id="sprayBlur"><feGaussianBlur stdDeviation="14" /></filter>
+                <filter id="neonGlow"><feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00f5d4" flood-opacity="0.65"/></filter>
+              </defs>
+
+              <ellipse cx="220" cy="105" rx="160" ry="58" fill="#00f5d4" opacity="0.18" filter="url(#sprayBlur)" />
+              <ellipse cx="560" cy="100" rx="190" ry="62" fill="#ff2a6d" opacity="0.22" filter="url(#sprayBlur)" />
+              <ellipse cx="400" cy="110" rx="140" ry="50" fill="#9b5de5" opacity="0.20" filter="url(#sprayBlur)" />
+
+              <g fill="#00f5d4" opacity="0.85">
+                <circle cx="88" cy="48" r="5"/><circle cx="72" cy="64" r="3"/><circle cx="106" cy="36" r="2.5"/>
+                <circle cx="730" cy="54" r="6"/><circle cx="755" cy="42" r="3"/><circle cx="715" cy="150" r="4"/>
+              </g>
+              <g fill="#ff2a6d" opacity="0.85">
+                <circle cx="110" cy="152" r="5"/><circle cx="130" cy="166" r="2.5"/>
+                <circle cx="670" cy="34" r="4"/><circle cx="748" cy="138" r="5"/>
+                <polygon points="62,115 68,125 79,126 70,134 73,145 62,139 51,145 54,134 45,126 56,125"/>
+                <polygon points="758,86 763,94 772,95 765,101 767,110 758,105 749,110 751,101 744,95 753,94"/>
+              </g>
+              <g fill="#fcee0a" opacity="0.9">
+                <circle cx="385" cy="24" r="4"/><circle cx="430" cy="172" r="3.5"/><circle cx="520" cy="28" r="3"/>
+              </g>
+
+              <g transform="rotate(-3 410 102)">
+                <text x="417" y="138" text-anchor="middle" style="font-family: 'Rubik Spray Paint', 'Permanent Marker', Impact, sans-serif; font-size: 98px; font-weight: 900; letter-spacing: 5px;" fill="#05060a" stroke="#05060a" stroke-width="20" stroke-linejoin="round">CT E-SPOR</text>
+                <text x="413" y="134" text-anchor="middle" style="font-family: 'Rubik Spray Paint', 'Permanent Marker', Impact, sans-serif; font-size: 98px; font-weight: 900; letter-spacing: 5px;" fill="#ff2a6d" stroke="#ff2a6d" stroke-width="14" stroke-linejoin="round">CT E-SPOR</text>
+                <text x="408" y="129" text-anchor="middle" style="font-family: 'Rubik Spray Paint', 'Permanent Marker', Impact, sans-serif; font-size: 98px; font-weight: 900; letter-spacing: 5px;" fill="#0b0d14" stroke="#090a10" stroke-width="15" stroke-linejoin="round">CT E-SPOR</text>
+                <text x="408" y="129" text-anchor="middle" filter="url(#neonGlow)" style="font-family: 'Rubik Spray Paint', 'Permanent Marker', Impact, sans-serif; font-size: 98px; font-weight: 900; letter-spacing: 5px;" fill="url(#grafFill)">CT E-SPOR</text>
+
+                <path d="M160,129 Q164,152 160,164 Q156,152 157,129 Z" fill="#00f5d4"/><circle cx="160" cy="171" r="3.5" fill="#00f5d4"/>
+                <path d="M235,129 Q238,148 235,158 Q232,148 232,129 Z" fill="#fcee0a"/>
+                <path d="M358,129 Q362,158 358,174 Q354,158 355,129 Z" fill="#00f5d4"/><circle cx="358" cy="182" r="3.2" fill="#00f5d4"/>
+                <path d="M512,129 Q516,150 512,162 Q508,150 509,129 Z" fill="#ff2a6d"/>
+                <path d="M640,129 Q644,155 640,169 Q636,155 637,129 Z" fill="#ff2a6d"/><circle cx="640" cy="177" r="3" fill="#ff2a6d"/>
+                <path d="M125,151 Q408,139 690,152" stroke="url(#grafFill)" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9"/>
+              </g>
+
+              <g transform="translate(565, 146) rotate(4)">
+                <rect x="0" y="0" width="198" height="36" rx="7" fill="url(#ctxTagFill)" stroke="#05060a" stroke-width="3"/>
+                <text x="99" y="24" text-anchor="middle" fill="#fff" style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 2px;">CTX ACADEMY</text>
+              </g>
+            </svg>
+
+            <p class="hero-sub">
+              Hoş geldin <strong style="color:var(--yellow)" id="homeWelcomeNick">Oyuncu</strong>!
+              8 modlu profesyonel <strong>Aim Lab</strong>, <strong>Sesli & Yazılı Koç Anlatımlı Taktik Tahtası</strong> ve <strong>CS2, Fortnite, Minecraft PvP, FC, eFootball</strong> testleriyle kendini geliştir.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn-primary" onclick="CTX.switchSection('sec-aimlab')">🎯 Aim Lab (8 Mod)</button>
+              <button class="btn-gold" onclick="CTX.switchSection('sec-tactics')">🔊 Sesli Taktikler & Testler</button>
+              <button class="btn-secondary" onclick="CTX.switchSection('sec-tools')">⚡ eDPI & CPS Araçları</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-label">Toplam Aim Lab Turu</div>
+            <div class="stat-val" id="homeTotalRuns">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">En Yüksek Aim Skoru</div>
+            <div class="stat-val" style="color:var(--yellow)" id="homeBestScore">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">En İyi Tepki / CPS</div>
+            <div class="stat-val" style="color:var(--green); font-size:1.45rem" id="homeBestReactCps">-- ms / 0.0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Tamamlanan Oyun Testi</div>
+            <div class="stat-val" style="color:var(--pink)" id="homeQuizSummary">0 / 5</div>
+          </div>
+        </div>
+
+        <div class="section-title">🔥 BRANŞINI SEÇ: TAKTİK + SESLİ ANLATIM + BİLGİ TESTİ</div>
+        <div class="grid-3">
+          <div class="card card-hover" style="cursor:pointer" onclick="CTX.openTacticGame('cs2')">
+            <span class="tag-pill">FPS / TAKTİK</span>
+            <h3 style="margin:10px 0 6px; font-family:var(--font-tech)">Counter-Strike 2</h3>
+            <p style="color:var(--muted); font-size:0.95rem">Mirage, Inferno, Dust2 sesli & yazılı taktik brifingi, utility tahtası ve 5 soruluk CS2 Taktik Sınavı.</p>
+          </div>
+          <div class="card card-hover" style="cursor:pointer" onclick="CTX.openTacticGame('fortnite')">
+            <span class="tag-pill" style="color:var(--purple); border-color:var(--purple)">BATTLE ROYALE</span>
+            <h3 style="margin:10px 0 6px; font-family:var(--font-tech)">Fortnite</h3>
+            <p style="color:var(--muted); font-size:0.95rem">Deadside Endgame & Box Fight Piece Control sesli anlatımı, tahta planlayıcı ve Fortnite Sınavı.</p>
+          </div>
+          <div class="card card-hover" style="cursor:pointer" onclick="CTX.openTacticGame('minecraft')">
+            <span class="tag-pill" style="color:var(--green); border-color:var(--green)">COMBAT / PVP</span>
+            <h3 style="margin:10px 0 6px; font-family:var(--font-tech)">Minecraft PvP</h3>
+            <p style="color:var(--muted); font-size:0.95rem">W-Tap, Hit-Select, Jump Reset, 1.9+ Crystal/NethPot sesli rehberi ve Minecraft PvP Testi.</p>
+          </div>
+          <div class="card card-hover" style="cursor:pointer" onclick="CTX.openTacticGame('fc')">
+            <span class="tag-pill" style="color:var(--yellow); border-color:var(--yellow)">FUTBOL / FC IQ</span>
+            <h3 style="margin:10px 0 6px; font-family:var(--font-tech)">EA Sports FC</h3>
+            <p style="color:var(--muted); font-size:0.95rem">4-2-1-3 & 4-4-2 sesli/yazılı saha anlatımı, Timed Finishing rehberi ve FC Taktik Testi.</p>
+          </div>
+          <div class="card card-hover" style="cursor:pointer" onclick="CTX.openTacticGame('efootball')">
+            <span class="tag-pill" style="color:var(--pink); border-color:var(--pink)">KONAMI / E-FUTBOL</span>
+            <h3 style="margin:10px 0 6px; font-family:var(--font-tech)">eFootball</h3>
+            <p style="color:var(--muted); font-size:0.95rem">Quick Counter & Possession sesli koç brifingi, Match-Up savunması ve eFootball Bilgi Testi.</p>
+          </div>
+          <div class="card card-hover" style="cursor:pointer; border-color:rgba(0,245,212,0.45)" onclick="CTX.switchSection('sec-aimlab')">
+            <span class="tag-pill">PRO EĞİTİM MODÜLÜ</span>
+            <h3 style="margin:10px 0 6px; font-family:var(--font-tech); color:var(--cyan)">CTX Aim Lab Studio</h3>
+            <p style="color:var(--muted); font-size:0.95rem">8 mod + 3D FPS Kilit + Vuruş Dağılım Radarı (Scatter Map) + Tepki Eğrisi Analizi!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 2. GELİŞMİŞ AIM LAB ==================== -->
+      <section id="sec-aimlab" class="section">
+        <div class="aim-controls-bar">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
+            <div class="mode-pills" id="aimModePills">
+              <button class="mode-pill active" data-mode="gridshot">⚡ Gridshot</button>
+              <button class="mode-pill" data-mode="microshot">🔬 Microshot</button>
+              <button class="mode-pill" data-mode="tracking">🌀 Tracking</button>
+              <button class="mode-pill" data-mode="strafebot">🏃 StrafeBot</button>
+              <button class="mode-pill" data-mode="spidershot">🕷️ SpiderShot</button>
+              <button class="mode-pill" data-mode="headpeek">🪖 CS2 Peek</button>
+              <button class="mode-pill" data-mode="flickswitch">🔀 Flick Switch</button>
+              <button class="mode-pill" data-mode="reflexpop">⚡ Reflex Pop</button>
+            </div>
+            <button class="btn-secondary" style="padding:7px 14px; font-size:0.9rem" onclick="CTX.toggleCrosshairDrawer()">⊕ Crosshair Stüdyosu</button>
+          </div>
+
+          <div class="aim-settings-row">
+            <div class="ctrl-group">
+              <label>Kontrol:</label>
+              <select id="aimControlType">
+                <option value="2d">2D Direkt Arena</option>
+                <option value="fps">3D FPS Kilit (Pointer Lock)</option>
+              </select>
+            </div>
+            <div class="ctrl-group">
+              <label>Zorluk:</label>
+              <select id="aimDifficulty">
+                <option value="normal">Standart</option>
+                <option value="pro">Pro (Hızlı & Küçük)</option>
+                <option value="godlike">Godlike (1.5x Skor)</option>
+              </select>
+            </div>
+            <div class="ctrl-group">
+              <label>Sens:</label>
+              <select id="aimRefGame" onchange="CTX.syncAimSens()">
+                <option value="cs2">CS2 / Apex</option>
+                <option value="fortnite">Fortnite (%)</option>
+                <option value="ow2">Overwatch 2</option>
+              </select>
+              <input type="number" id="aimSensVal" value="1.5" step="0.1" min="0.05" max="100" style="width:68px" onchange="CTX.syncAimSens()" />
+              <span>DPI:</span>
+              <input type="number" id="aimDpiVal" value="800" step="100" min="100" max="6400" style="width:72px" onchange="CTX.syncAimSens()" />
+            </div>
+            <div class="ctrl-group">
+              <label>FOV:</label>
+              <select id="aimFovVal">
+                <option value="80" selected>80°</option>
+                <option value="90">90°</option>
+                <option value="103">103°</option>
+              </select>
+            </div>
+            <div class="ctrl-group">
+              <label>Renk:</label>
+              <select id="aimTargetColor">
+                <option value="#00f5d4">Cyan Neon</option>
+                <option value="#ff2a6d">Kızıl Neon</option>
+                <option value="#fcee0a">Sarı</option>
+                <option value="#38ff7a">Yeşil</option>
+              </select>
+            </div>
+            <div class="ctrl-group">
+              <label>Süre:</label>
+              <select id="aimDuration">
+                <option value="30">30 sn</option>
+                <option value="60" selected>60 sn</option>
+                <option value="90">90 sn</option>
+              </select>
+            </div>
+            <div class="ctrl-group">
+              <label><input type="checkbox" id="aimSoundToggle" checked /> Ses</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="crosshair-drawer" id="crosshairDrawer">
+          <canvas id="crosshairPreview" width="110" height="110"></canvas>
+          <div style="display:flex; flex-wrap:wrap; gap:14px; flex:1">
+            <div class="ctrl-group"><label>Stil:</label><select id="chStyle" onchange="CTX.updateCrosshair()"><option value="cross">Artı (+)</option><option value="dot">Nokta (•)</option><option value="crossdot">Artı + Nokta</option><option value="circle">Çember</option></select></div>
+            <div class="ctrl-group"><label>Renk:</label><input type="color" id="chColor" value="#00f5d4" onchange="CTX.updateCrosshair()" style="height:30px; padding:2px; width:42px" /></div>
+            <div class="ctrl-group"><label>Boy:</label><input type="range" id="chSize" min="3" max="20" value="9" oninput="CTX.updateCrosshair()" /></div>
+            <div class="ctrl-group"><label>Kalınlık:</label><input type="range" id="chThick" min="1" max="5" value="2" oninput="CTX.updateCrosshair()" /></div>
+            <div class="ctrl-group"><label>Boşluk:</label><input type="range" id="chGap" min="0" max="12" value="4" oninput="CTX.updateCrosshair()" /></div>
+            <div class="ctrl-group"><label><input type="checkbox" id="chOutline" checked onchange="CTX.updateCrosshair()" /> Siyah Kontur</label></div>
+          </div>
+        </div>
+
+        <div class="aim-hud">
+          <div class="hud-box"><span>SKOR</span><strong id="hudScore">0</strong></div>
+          <div class="hud-box"><span>İSABET %</span><strong id="hudAcc">100%</strong></div>
+          <div class="hud-box"><span>ORT. TEPKİ</span><strong id="hudReaction">0 ms</strong></div>
+          <div class="hud-box"><span>SERİ</span><strong id="hudStreak" style="color:var(--yellow)">0</strong></div>
+          <div class="hud-box"><span>HIZ (KPS)</span><strong id="hudKps">0.0</strong></div>
+          <div class="hud-box"><span>SÜRE</span><strong id="hudTimer" style="color:var(--pink)">60s</strong></div>
+        </div>
+
+        <div class="aim-stage-wrap">
+          <canvas id="aimCanvas"></canvas>
+
+          <div class="aim-overlay" id="aimStartOverlay">
+            <div class="tag-pill" style="margin-bottom:8px" id="aimModeBadge">GRIDSHOT</div>
+            <h2 style="font-family:var(--font-tech); font-size:1.95rem; margin-bottom:8px" id="aimModeTitle">Gridshot (Hız & Flick)</h2>
+            <p style="color:#c4cde8; max-width:580px; margin-bottom:18px; font-size:1.03rem" id="aimModeDesc"></p>
+            <button class="btn-primary" style="font-size:1.12rem; padding:12px 30px" onclick="CTX.startAimSession()">▶ ANTRENMANI BAŞLAT</button>
+            <div style="margin-top:10px; font-size:0.86rem; color:var(--muted)" id="aimSensInfo"></div>
+          </div>
+
+          <div class="aim-overlay hidden" id="aimPauseOverlay">
+            <h2 style="font-family:var(--font-tech); color:var(--yellow); margin-bottom:10px">FPS KİLİDİ DURAKLATILDI</h2>
+            <div style="display:flex; gap:12px">
+              <button class="btn-primary" onclick="CTX.resumePointerLock()">▶ Devam Et</button>
+              <button class="btn-danger" onclick="CTX.finishAimSession(false)">⏹ Turu Bitir</button>
+            </div>
+          </div>
+
+          <div class="aim-overlay hidden" id="aimReportOverlay">
+            <div class="report-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
+                <div style="text-align:left">
+                  <span class="tag-pill" id="repModeTag">GRIDSHOT</span>
+                  <h2 style="font-family:var(--font-tech); margin-top:4px; font-size:1.35rem">GELİŞMİŞ PERFORMANS RAPORU</h2>
+                </div>
+                <div class="grade-badge" id="repGrade">S+</div>
+              </div>
+
+              <div class="report-grid">
+                <div class="report-stat"><small>SKOR</small><b id="repScore">0</b></div>
+                <div class="report-stat"><small>İSABET %</small><b id="repAcc">0%</b></div>
+                <div class="report-stat"><small>ORT. TEPKİ</small><b id="repReact">0 ms</b></div>
+                <div class="report-stat"><small>KPS / XP</small><b id="repKpsXp">0 / +0</b></div>
+              </div>
+
+              <div class="report-charts-row">
+                <canvas id="aimReportChart" width="520" height="125" style="width:100%; height:125px; background:#080b13; border:1px solid var(--border); border-radius:8px"></canvas>
+                <canvas id="aimScatterChart" width="165" height="125" style="width:100%; height:125px; background:#080b13; border:1px solid var(--border); border-radius:8px"></canvas>
+              </div>
+
+              <div id="repCoachTip" style="background:rgba(0,245,212,0.08); border-left:3px solid var(--cyan); padding:8px 12px; text-align:left; border-radius:0 8px 8px 0; font-size:0.94rem; margin-bottom:6px"></div>
+              <div id="repScatterTip" style="background:rgba(255,42,109,0.08); border-left:3px solid var(--pink); padding:7px 12px; text-align:left; border-radius:0 8px 8px 0; font-size:0.9rem; margin-bottom:14px"></div>
+
+              <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+                <button class="btn-primary" onclick="CTX.startAimSession()">🔄 Tekrar Oyna</button>
+                <button class="btn-secondary" onclick="CTX.closeAimReport()">⚙️ Ayarlara Dön</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <h3 style="font-family:var(--font-tech); font-size:1rem">📊 SON AIM LAB SKORLARI</h3>
+            <button class="tool-btn" onclick="CTX.clearAimHistory()">Geçmişi Temizle</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Mod</th><th>Skor</th><th>İsabet</th><th>Ort. Tepki</th><th>KPS</th><th>Derece</th></tr></thead>
+            <tbody id="aimHistoryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==================== 3. OYUN TAKTİKLERİ + SESLİ/YAZILI KOÇ + TESTLER ==================== -->
+      <section id="sec-tactics" class="section">
+        <div class="game-tabs" id="tacticGameTabs">
+          <button class="game-tab active" data-game="cs2" onclick="CTX.selectTacticGame('cs2')">🔫 Counter-Strike 2</button>
+          <button class="game-tab" data-game="fortnite" onclick="CTX.selectTacticGame('fortnite')">🧱 Fortnite</button>
+          <button class="game-tab" data-game="minecraft" onclick="CTX.selectTacticGame('minecraft')">⚔️ Minecraft PvP</button>
+          <button class="game-tab" data-game="fc" onclick="CTX.selectTacticGame('fc')">⚽ EA Sports FC</button>
+          <button class="game-tab" data-game="efootball" onclick="CTX.selectTacticGame('efootball')">🏟️ eFootball</button>
+        </div>
+
+        <div class="tactics-top-split">
+          <div class="tactic-board-shell">
+            <div class="board-toolbar">
+              <div class="tool-group">
+                <strong style="font-family:var(--font-tech); color:var(--cyan); margin-right:4px" id="boardTitle">TAKTİK TAHTASI</strong>
+                <select id="boardMapSelect" onchange="CTX.changeBoardMap()"></select>
+                <select id="boardPresetSelect" onchange="CTX.loadBoardPreset()"></select>
+              </div>
+
+              <div class="tool-group" id="boardActionTools">
+                <button class="tool-btn active" data-tool="move" onclick="CTX.setBoardTool('move')">✋ Taşı</button>
+                <button class="tool-btn" data-tool="pen" onclick="CTX.setBoardTool('pen')">✏️ Çiz</button>
+                <button class="tool-btn" data-tool="arrow" onclick="CTX.setBoardTool('arrow')">↗️ Ok</button>
+                <input type="color" id="boardColor" value="#fcee0a" style="height:28px; width:34px; padding:1px" />
+              </div>
+
+              <div class="tool-group" id="boardStampPalette"></div>
+
+              <div class="tool-group">
+                <button class="tool-btn" onclick="CTX.undoBoard()">↩️</button>
+                <button class="tool-btn" onclick="CTX.clearBoard()">🗑️</button>
+                <button class="tool-btn" style="border-color:var(--green); color:var(--green)" onclick="CTX.downloadBoard()">💾 PNG</button>
+              </div>
+            </div>
+
+            <canvas id="tacticCanvas"></canvas>
+            <div style="margin-top:6px; font-size:0.85rem; color:var(--muted)">
+              İpucu: Sağdaki Sesli/Yazılı Anlatımı başlattığında ilgili oyuncular ve oklar tahtada canlı olarak parlar!
+            </div>
+          </div>
+
+          <div class="briefing-shell">
+            <div class="briefing-header">
+              <div>
+                <span class="tag-pill">KOÇ ANLATIMI</span>
+                <h3 style="font-family:var(--font-tech); font-size:1rem; margin-top:4px; color:var(--yellow)" id="briefingPresetTitle">Taktik Senaryosu</h3>
+              </div>
+              <select id="briefingVoiceRate" title="Anlatım Hızı">
+                <option value="0.9">0.9x Yavaş</option>
+                <option value="1" selected>1.0x Normal</option>
+                <option value="1.18">1.2x Hızlı</option>
+              </select>
+            </div>
+
+            <div class="briefing-controls">
+              <button class="btn-primary" style="padding:7px 12px; font-size:0.9rem" onclick="CTX.startBriefing(true)">🔊 Sesli Anlat</button>
+              <button class="btn-secondary" style="padding:7px 12px; font-size:0.9rem" onclick="CTX.startBriefing(false)">📖 Yazılı Akış</button>
+              <button class="tool-btn" onclick="CTX.nextBriefStep()">⏭ Sonraki</button>
+              <button class="btn-danger" style="padding:6px 11px; font-size:0.88rem" onclick="CTX.stopBriefing()">⏹ Dur</button>
+            </div>
+
+            <div class="briefing-status" id="briefingVoiceStatus">Hazır — Adıma tıkla veya Sesli/Yazılı Anlatımı başlat.</div>
+            <div class="briefing-steps" id="briefingStepsList"></div>
+          </div>
+        </div>
+
+        <div class="tactics-bottom-split">
+          <div class="guides-stack" id="tacticGuidesGrid"></div>
+
+          <div class="quiz-shell">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
+              <span class="tag-pill" style="background:rgba(155,93,229,0.2); border-color:var(--purple); color:#e9d5ff" id="quizGameBadge">CS2 TAKTİK TESTİ</span>
+              <span style="font-family:var(--font-tech); font-size:0.88rem; color:var(--yellow)" id="quizProgress">Soru 1 / 5</span>
+            </div>
+            <div style="margin-top:6px; font-size:0.86rem; color:var(--muted)" id="quizBestBanner">En İyi Skor: Henüz çözülmedi</div>
+            <div id="quizBody"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 4. PRO ARAÇLAR & GÜNLÜK RUTİN ==================== -->
+      <section id="sec-tools" class="section">
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="section-title">🎚️ FPS Sensitivity & eDPI Dönüştürücü</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px">
+              <div>
+                <label style="font-size:0.85rem; color:var(--muted)">Kaynak Oyun</label>
+                <select id="convGame" style="width:100%; margin-top:4px" onchange="CTX.calcSens()">
+                  <option value="cs2">CS2 / Apex Legends</option>
+                  <option value="fortnite">Fortnite (%)</option>
+                  <option value="ow2">Overwatch 2</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.85rem; color:var(--muted)">Hassasiyet</label>
+                <input type="number" id="convSens" value="1.5" step="0.05" style="width:100%; margin-top:4px" oninput="CTX.calcSens()" />
+              </div>
+              <div>
+                <label style="font-size:0.85rem; color:var(--muted)">Mouse DPI</label>
+                <input type="number" id="convDpi" value="800" step="100" style="width:100%; margin-top:4px" oninput="CTX.calcSens()" />
+              </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom:14px">
+              <div class="report-stat"><small>cm / 360°</small><b id="convCm360" style="color:var(--yellow)">34.6 cm</b></div>
+              <div class="report-stat"><small>CS2 / Apex</small><b id="convCs2">1.50</b></div>
+              <div class="report-stat"><small>Fortnite (%)</small><b id="convFn">5.94%</b></div>
+              <div class="report-stat"><small>Overwatch 2</small><b id="convOw2">5.00</b></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
+              <span style="color:var(--muted); font-size:0.92rem">eDPI (Kaynak): <strong id="convEdpi" style="color:var(--cyan)">1200</strong></span>
+              <button class="btn-primary" style="padding:8px 14px; font-size:0.92rem" onclick="CTX.applyConvertedSens()">🎯 Aim Lab'e Aktar</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="section-title">⚡ Saf Tepki Süresi Testi</h3>
+            <div class="reaction-box reaction-idle" id="reactionBox" onclick="CTX.handleReactionClick()">
+              <div id="reactionText">BAŞLATMAK İÇİN TIKLA</div>
+              <small style="font-family:var(--font-ui); font-weight:600; opacity:0.85; margin-top:6px" id="reactionSub">Ekran YEŞİL olduğunda olabildiğince hızlı tıkla (5 Tur)</small>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:0.95rem">
+              <span>Tur: <strong id="reactRound">0 / 5</strong></span>
+              <span>Ortalama: <strong id="reactAvg" style="color:var(--green)">-- ms</strong></span>
+              <span>Pro Referans: <strong style="color:var(--yellow)">&lt; 185 ms</strong></span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="section-title">⚔️ Minecraft PvP CPS & Ritm Testi</h3>
+            <div class="cps-pad" id="cpsPad" onmousedown="CTX.handleCpsClick(event)">
+              <div style="font-family:var(--font-tech); font-size:2rem; color:var(--cyan)" id="cpsLive">0.0 CPS</div>
+              <div style="color:var(--muted); margin-top:4px" id="cpsStatus">5 saniyelik test için buraya hızlıca tıkla!</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:0.95rem">
+              <span>Toplam Tık: <strong id="cpsClicks">0</strong></span>
+              <span>Teknik: <strong id="cpsStyle" style="color:var(--pink)">--</strong></span>
+              <button class="tool-btn" onclick="CTX.resetCps()">Sıfırla</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px">
+              <h3 class="section-title" style="margin-bottom:0">📅 CTX Günlük Akademi Rutini</h3>
+              <select id="routineGameSelect" onchange="CTX.renderRoutine()">
+                <option value="cs2">Counter-Strike 2</option>
+                <option value="fortnite">Fortnite</option>
+                <option value="minecraft">Minecraft PvP</option>
+                <option value="fc">EA Sports FC / eFootball</option>
+              </select>
+            </div>
+            <div id="routineList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const ACCOUNTS_KEY = 'ctx_espor_accounts_v3';
+      const SESSION_KEY = 'ctx_espor_session_v3';
+
+      // ================= GÜVENLİK & HESAP SİSTEMİ =================
+      let accounts = {};
+      let currentUser = null;
+      let registerUnlocked = false;
+
+      function verifyAccessCode(val) {
+        const seq = [67, 84, 88, 33];
+        if (typeof val !== 'string' || val.length !== seq.length) return false;
+        let diff = 0;
+        for (let i = 0; i < seq.length; i++) diff |= val.charCodeAt(i) ^ seq[i];
+        return diff === 0;
+      }
+
+      function hashPass(str) {
+        let h = 2166136261;
+        for (let i = 0; i < str.length; i++) {
+          h ^= str.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return (h >>> 0).toString(16);
+      }
+
+      function defaultUserProgress(branch) {
+        return {
+          branch: branch || 'Counter-Strike 2',
+          xp: 0,
+          aimHistory: [],
+          bestReaction: null,
+          bestCps: 0,
+          routineDone: {},
+          quizBest: {}
+        };
+      }
+
+      function loadAccounts() {
+        try {
+          const raw = localStorage.getItem(ACCOUNTS_KEY);
+          if (raw) accounts = JSON.parse(raw);
+        } catch (e) { accounts = {}; }
+      }
+
+      function saveAccounts() {
+        try { localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts)); } catch (e) {}
+      }
+
+      function switchAuthTab(tab) {
+        const isLogin = tab === 'login';
+        document.getElementById('tabLogin').classList.toggle('active', isLogin);
+        document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+        document.getElementById('authLoginPanel').style.display = isLogin ? 'block' : 'none';
+        document.getElementById('authRegisterPanel').style.display = isLogin ? 'none' : 'block';
+        document.getElementById('loginMsg').textContent = '';
+        document.getElementById('regGateMsg').textContent = '';
+        document.getElementById('regMsg').textContent = '';
+      }
+
+      function unlockRegisterGate() {
+        const code = document.getElementById('regGateCode').value;
+        const msg = document.getElementById('regGateMsg');
+        if (!verifyAccessCode(code)) {
+          msg.textContent = 'Yetki kodu geçersiz. Erişim reddedildi!';
+          document.getElementById('regGateCode').value = '';
+          return;
+        }
+        registerUnlocked = true;
+        document.getElementById('regGateCode').value = '';
+        document.getElementById('regVaultGate').style.display = 'none';
+        document.getElementById('regFormUnlocked').style.display = 'block';
+      }
+
+      function handleRegister() {
+        if (!registerUnlocked) return;
+        const user = document.getElementById('regUser').value.trim();
+        const branch = document.getElementById('regBranch').value;
+        const p1 = document.getElementById('regPass').value;
+        const p2 = document.getElementById('regPass2').value;
+        const msg = document.getElementById('regMsg');
+
+        if (user.length < 3) { msg.textContent = 'Kullanıcı adı en az 3 karakter olmalı.'; return; }
+        if (accounts[user.toLowerCase()]) { msg.textContent = 'Bu kullanıcı adı zaten alınmış.'; return; }
+        if (p1.length < 4) { msg.textContent = 'Şifre en az 4 karakter olmalı.'; return; }
+        if (p1 !== p2) { msg.textContent = 'Şifreler birbiriyle eşleşmiyor.'; return; }
+
+        const key = user.toLowerCase();
+        accounts[key] = {
+          displayName: user,
+          passHash: hashPass(p1),
+          data: defaultUserProgress(branch)
+        };
+        saveAccounts();
+        enterAcademy(key);
+      }
+
+      function handleLogin() {
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        const sec = document.getElementById('loginSecret').value;
+        const msg = document.getElementById('loginMsg');
+
+        if (!verifyAccessCode(sec)) {
+          msg.textContent = 'Erişim reddedildi! Bilgileri veya kodu kontrol et.';
+          document.getElementById('loginSecret').value = '';
+          return;
+        }
+        const key = user.toLowerCase();
+        const acc = accounts[key];
+        if (!acc || acc.passHash !== hashPass(pass)) {
+          msg.textContent = 'Kullanıcı adı veya şifre hatalı.';
+          return;
+        }
+        enterAcademy(key);
+      }
+
+      function enterAcademy(userKey) {
+        currentUser = userKey;
+        try { sessionStorage.setItem(SESSION_KEY, userKey); } catch (e) {}
+        state = { ...defaultUserProgress(), ...accounts[userKey].data };
+
+        // Güvenlik için kayıt kilidini sıfırla
+        registerUnlocked = false;
+        document.getElementById('regVaultGate').style.display = 'block';
+        document.getElementById('regFormUnlocked').style.display = 'none';
+        document.getElementById('loginUser').value = '';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginSecret').value = '';
+        document.getElementById('regUser').value = '';
+        document.getElementById('regPass').value = '';
+        document.getElementById('regPass2').value = '';
+
+        document.getElementById('authGate').classList.add('hidden');
+        document.getElementById('appShell').classList.remove('hidden');
+
+        document.getElementById('uiUserNick').textContent = `👤 ${accounts[userKey].displayName}`;
+        document.getElementById('homeWelcomeNick').textContent = accounts[userKey].displayName;
+
+        updateGlobalUI();
+        syncAimSens();
+        selectAimMode('gridshot');
+        selectTacticGame('cs2');
+        calcSens();
+        renderRoutine();
+      }
+
+      function logout() {
+        if (aim.running) finishAimSession(true);
+        stopBriefing();
+        currentUser = null;
+        try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+        document.getElementById('appShell').classList.add('hidden');
+        document.getElementById('authGate').classList.remove('hidden');
+        switchAuthTab('login');
+      }
+
+      // ================= OYUN TAKTİKLERİ + SESLİ/YAZILI SENARYOLAR + SINAVLAR =================
+      const GAMES_DATA = {
+        cs2: {
+          name: 'Counter-Strike 2',
+          maps: [{ id: 'mirage', label: 'de_mirage' }, { id: 'inferno', label: 'de_inferno' }, { id: 'dust2', label: 'de_dust2' }],
+          stamps: [
+            { id: 'ct', label: 'CT', color: '#38bdf8', text: 'CT' },
+            { id: 't', label: 'T', color: '#fb923c', text: 'T' },
+            { id: 'smoke', label: 'Smoke', color: '#94a3b8', text: 'SMK' },
+            { id: 'flash', label: 'Flash', color: '#facc15', text: 'FL' },
+            { id: 'molo', label: 'Molo', color: '#ef4444', text: 'MOL' },
+            { id: 'c4', label: 'C4', color: '#ff2a6d', text: 'C4' }
+          ],
+          presets: {
+            mirage: [
+              {
+                name: 'Mirage A Site Execute (3 Smoke)',
+                tokens: [
+                  { x: 380, y: 125, label: 'SMK', color: '#94a3b8' },
+                  { x: 435, y: 185, label: 'SMK', color: '#94a3b8' },
+                  { x: 495, y: 80, label: 'SMK', color: '#94a3b8' },
+                  { x: 245, y: 130, label: 'T', color: '#fb923c' },
+                  { x: 240, y: 90, label: 'T', color: '#fb923c' },
+                  { x: 280, y: 165, label: 'T', color: '#fb923c' },
+                  { x: 350, y: 110, label: 'FL', color: '#facc15' },
+                  { x: 435, y: 120, label: 'C4', color: '#ff2a6d' },
+                  { x: 525, y: 130, label: 'CT', color: '#38bdf8' }
+                ],
+                arrows: [{ x1: 245, y1: 130, x2: 390, y2: 120, color: '#fb923c' }, { x1: 240, y1: 90, x2: 410, y2: 95, color: '#fcee0a' }],
+                steps: [
+                  { title: '1. Adım: Smokes Kurulumu', text: 'T Ramp ve Tetris arkasındaki 3 oyuncu aynı anda Stairs, Jungle ve CT Spawn smoke atarak savunmanın uzun mesafe görüşünü tamamen kapatır.', focusTokens: [0,1,2], focusArrows: [] },
+                  { title: '2. Adım: Pop-Flash & Entry Çıkışı', text: 'Destek oyuncusu A Ramp üstünden yüksek pop-flash patlatır. Palace ve Ramp girişçileri aynı salise site içine çıkar ve Tetris/Default açılarını temizler.', focusTokens: [3,4,6], focusArrows: [0,1] },
+                  { title: '3. Adım: Site İçi Trade & C4 Kurulumu', text: 'Girişçi Default arkasındaki CT oyuncusuyla çatışırken 2. oyuncu onu anında takaslar. Bomba Default veya Open açıya kurulur.', focusTokens: [7,8], focusArrows: [0] },
+                  { title: '4. Adım: Post-Plant Crossfire', text: 'Bomba kurulduktan sonra takım Ramp, Palace ve Tetris arasına yayılarak birbirini koruyan çapraz ateş açıları tutar.', focusTokens: [3,5,7], focusArrows: [] }
+                ]
+              },
+              {
+                name: 'Mirage Mid-to-B Split',
+                tokens: [
+                  { x: 470, y: 245, label: 'SMK', color: '#94a3b8' }, { x: 515, y: 315, label: 'SMK', color: '#94a3b8' },
+                  { x: 360, y: 270, label: 'T', color: '#fb923c' }, { x: 395, y: 295, label: 'T', color: '#fb923c' },
+                  { x: 330, y: 400, label: 'T', color: '#fb923c' }, { x: 540, y: 385, label: 'C4', color: '#ff2a6d' }, { x: 560, y: 360, label: 'CT', color: '#38bdf8' }
+                ],
+                arrows: [{ x1: 360, y1: 270, x2: 485, y2: 365, color: '#00f5d4' }, { x1: 330, y1: 400, x2: 515, y2: 390, color: '#fb923c' }],
+                steps: [
+                  { title: '1. Adım: Window & Connector Smoke', text: 'Top Mid kontrolü almak için Window ve Connector smoke atılır; Mid oyuncularımız A tarafından vurulmadan Short hattına ilerler.', focusTokens: [0,1], focusArrows: [] },
+                  { title: '2. Adım: Short & B Apps Senkronu', text: 'Mid grubu Short üzerinden Market penceresine baskı kurarken, B Apps grubu aynı saniye pencereden atlayarak savunmayı iki ateş arasında bırakır.', focusTokens: [2,3,4], focusArrows: [0,1] },
+                  { title: '3. Adım: B Site Temizliği & C4', text: 'Van ve Bench temizlendikten sonra bomba B Default noktasına kurulur ve Short ile Apps yönlerinden tutulur.', focusTokens: [5,6], focusArrows: [1] }
+                ]
+              }
+            ],
+            inferno: [{
+              name: 'Inferno B Exec (Coffins + CT Smoke)',
+              tokens: [
+                { x: 645, y: 115, label: 'SMK', color: '#94a3b8' }, { x: 585, y: 78, label: 'SMK', color: '#94a3b8' },
+                { x: 430, y: 165, label: 'T', color: '#fb923c' }, { x: 465, y: 145, label: 'T', color: '#fb923c' },
+                { x: 515, y: 120, label: 'MOL', color: '#ef4444' }, { x: 550, y: 115, label: 'C4', color: '#ff2a6d' }
+              ],
+              arrows: [{ x1: 430, y1: 165, x2: 535, y2: 120, color: '#fb923c' }],
+              steps: [
+                { title: '1. Adım: Banana Hakimiyeti', text: 'Car ve Half-Wall molotoflanarak CT oyuncularının Banana\'da erken pozisyon alması engellenir.', focusTokens: [2,3], focusArrows: [] },
+                { title: '2. Adım: CT & Coffins Smoke + Newbox Molotov', text: 'CT ve Coffins smoke atıldıktan hemen sonra Newbox arkasına molotof bırakılır; savunma saklanacak yer bulamaz.', focusTokens: [0,1,4], focusArrows: [0] },
+                { title: '3. Adım: Flash ile B Site Girişi', text: 'Girişçiler 1. ve 2. kutuyu temizler, bomba güvenli alana kurulur.', focusTokens: [5], focusArrows: [0] }
+              ]
+            }],
+            dust2: [{
+              name: 'Dust2 Mid-to-B Split (Xbox Smoke)',
+              tokens: [
+                { x: 450, y: 245, label: 'SMK', color: '#94a3b8' }, { x: 590, y: 260, label: 'SMK', color: '#94a3b8' },
+                { x: 430, y: 300, label: 'T', color: '#fb923c' }, { x: 460, y: 325, label: 'T', color: '#fb923c' },
+                { x: 675, y: 350, label: 'T', color: '#fb923c' }, { x: 745, y: 340, label: 'C4', color: '#ff2a6d' }
+              ],
+              arrows: [{ x1: 450, y1: 280, x2: 715, y2: 325, color: '#00f5d4' }, { x1: 675, y1: 350, x2: 735, y2: 345, color: '#fb923c' }],
+              steps: [
+                { title: '1. Adım: Xbox Smoke', text: 'T Spawn veya Catwalk\'tan Xbox üstüne smoke atılarak Mid AWP\'sinin görüşü kesilir.', focusTokens: [0,2,3], focusArrows: [] },
+                { title: '2. Adım: CT Mid Smoke & B Kapısı', text: 'Mid kapılarından çıkıp CT Mid smoke atılır, böylece A\'dan gelecek destek tamamen kesilir.', focusTokens: [1], focusArrows: [0] },
+                { title: '3. Adım: Çift Yönlü B Baskını', text: 'B Tünel ve Mid Kapı oyuncuları aynı saniye B Site içine girerek savunmayı kırar.', focusTokens: [4,5], focusArrows: [0,1] }
+              ]
+            }]
+          },
+          guides: [
+            { title: '🎯 Mekanik & Crosshair Placement', items: ['<strong>Counter-Strafe (A-D):</strong> Sola (A) giderken ateş edeceğin salise sağa (D) dokunarak hızı anında 0 m/s yap.', '<strong>Kafa Hizası:</strong> Duvar kenarından yarım karakter boşluk bırakarak sadece A veya D ile açı temizle.', '<strong>Jiggle Peek:</strong> AWP tutan oyuncuları yemlemek için köşeden 0.1sn çık-gir yapıp mermiyi boşa harcat.'] },
+            { title: '💰 Ekonomi & Takım Oyunu', items: ['<strong>Senkron Buy:</strong> 5 kişi aynı anda Full Buy veya Eco yapmalı; bireysel Force-Buy ekonomiyi bozar.', '<strong>Trade Frag (1.5sn):</strong> Entry fragger site\'a girerken arkasından en fazla 1.5sn mesafede takip edip takası al.', '<strong>Post-Plant Crossfire:</strong> Bomba kurulduktan sonra 2v2\'de saklanmak yerine birbirini görebilen açılara bölünün.'] }
+          ],
+          quiz: [
+            { q: 'CS2\'de yürürken mermilerin tamamen düz ve isabetli gitmesi için ateş etmeden saliseler önce hangi mekanik yapılmalıdır?', opts: ['Zıplamak (Jump Shot)', 'Counter-Strafe (Zıt yön tuşuna dokunup hızı sıfırlamak)', 'Sadece W tuşuna basılı tutmak', 'Mouse DPI değerini artırmak'], ans: 1, exp: 'CS2\'de hareket hızı sıfırlandığı an silah isabeti maksimuma ulaşır. A ile giderken D\'ye dokunmak seni anında durdurur.' },
+            { q: 'Mirage A Execute atarken atılan klasik 3 Smoke hangi bölgeleri kapatmayı hedefler?', opts: ['T Spawn, Palace, B Apps', 'CT Spawn, Jungle/Connector, Stairs', 'Mid Window, Catwalk, Underpass', 'Van, Market, Bench'], ans: 1, exp: 'CT, Jungle ve Stairs smokelandığında A Site içindeki savunma tamamen izole edilir ve site girişi güvenli hale gelir.' },
+            { q: 'Takımından 1 kişi Full Buy yapabiliyorken diğer 4 kişinin parası $1800 civarındaysa en doğru takım kararı nedir?', opts: ['Parası olan 1 kişi AWP alsın, diğerleri bıçakla girsin', 'Herkes parasını tutup aynı anda Eco/Save yaparak sonraki round Full Buy çıksın', 'Sadece 2 kişi Force atsın', 'Herkes P90 almaya çalışsın'], ans: 1, exp: 'CS2 takım ekonomisinde tüm oyuncular aynı round Full Buy alabilecek şekilde senkronize hareket etmelidir.' },
+            { q: 'Entry Fragger (ilk girişçi) site\'a girerken arkasındaki 2. oyuncunun en önemli görevi nedir?', opts: ['Spawn\'da bomba korumak', 'Entry ölürse rakibi 1 saniye içinde Trade Frag (takas) ile vurmak', 'Sadece sessiz yürümek', 'Base\'e geri dönmek'], ans: 1, exp: 'CS2\'de ölen arkadaşının verdiği pozisyonu anında takaslamak (Trade Frag) site ele geçirmenin altın kuralıdır.' },
+            { q: 'Bomba kurulduktan (Post-Plant) sonra 2v2 durumda nasıl pozisyon almak kazanma şansını en çok artırır?', opts: ['İkiniz de aynı kutunun arkasına saklanmak', 'Birbirinizin tuttuğu alanı görebilecek Crossfire (Çapraz Ateş) açıları kurmak', 'Rakibin CT Spawn\'ına koşmak', 'Bombadan tamamen uzaklaşmak'], ans: 1, exp: 'Çapraz ateş sayesinde rakip birinize ateş ettiğinde diğeri onu arkasından/yanından ücretsiz şekilde vurabilir.' }
+          ]
+        },
+
+        fortnite: {
+          name: 'Fortnite',
+          maps: [{ id: 'endgame', label: 'Endgame Moving Zone' }, { id: 'boxfight', label: 'Box Fight 3x3 Arena' }],
+          stamps: [
+            { id: 'me', label: 'Sen', color: '#00f5d4', text: 'SEN' }, { id: 'enemy', label: 'Rakip', color: '#ff2a6d', text: 'RAK' },
+            { id: 'cone', label: 'Koni', color: '#fcee0a', text: 'KONİ' }, { id: 'wall', label: 'Duvar', color: '#3b82f6', text: 'DUV' }, { id: 'pad', label: 'Pad', color: '#38ff7a', text: 'PAD' }
+          ],
+          presets: {
+            endgame: [{
+              name: 'Deadside Rotasyon & Tarp Hattı',
+              tokens: [{ x: 255, y: 315, label: 'SEN', color: '#00f5d4' }, { x: 575, y: 205, label: 'PAD', color: '#38ff7a' }, { x: 640, y: 170, label: 'KONİ', color: '#fcee0a' }, { x: 420, y: 120, label: 'RAK', color: '#ff2a6d' }, { x: 460, y: 140, label: 'RAK', color: '#ff2a6d' }],
+              arrows: [{ x1: 255, y1: 315, x2: 570, y2: 210, color: '#00f5d4' }, { x1: 575, y1: 205, x2: 665, y2: 175, color: '#38ff7a' }],
+              steps: [
+                { title: '1. Adım: Deadside Bölgesini Tespit Et', text: 'Yeni güvenli bölge haritanın uzak kenarına çektiğinde kalabalığın toplandığı Frontside yerine sakin olan Deadside kanadına yönel.', focusTokens: [0,3,4], focusArrows: [] },
+                { title: '2. Adım: Erken Tarp & Mobilite Kullanımı', text: 'Fırtına hareketlenmeden 5 saniye önce koni/duvar tarpı veya Shockwave/Jump Pad ile güvenli hattın ortasına erken yerleş.', focusTokens: [1], focusArrows: [0] },
+                { title: '3. Adım: Yeni Kutuyu Metal İle Kapat & Refresh Ara', text: 'Hedefe ulaştığında kutunu Metal ile güvenceye al ve fırtınadan kaçmaya çalışan açık rakiplere tag atarak malzeme yenile.', focusTokens: [2], focusArrows: [1] }
+              ]
+            }],
+            boxfight: [{
+              name: 'Full Box & Peanut Butter Peek',
+              tokens: [{ x: 480, y: 250, label: 'RAK', color: '#ff2a6d' }, { x: 350, y: 250, label: 'SEN', color: '#00f5d4' }, { x: 480, y: 165, label: 'DUV', color: '#3b82f6' }, { x: 480, y: 335, label: 'DUV', color: '#3b82f6' }, { x: 565, y: 250, label: 'KONİ', color: '#fcee0a' }],
+              arrows: [{ x1: 350, y1: 250, x2: 455, y2: 245, color: '#fcee0a' }],
+              steps: [
+                { title: '1. Adım: Rakibi Konile & Kutuyu Kilitle', text: 'Rakibin kutusuna girmeden önce üstüne veya içine Koni at, ardından yan ve arka duvarları hızlıca kendi üzerine al (Piece Control).', focusTokens: [2,3,4], focusArrows: [] },
+                { title: '2. Adım: Peanut Butter (Sağ Üst 3 Kare) Editi', text: 'Sağ omuz kamera avantajını kullanmak için duvarın sağ üst 3 karesini editle. Rakip seni göremezken sen onu tam görürsün.', focusTokens: [1], focusArrows: [0] },
+                { title: '3. Adım: Zıpla, Pompalıyı Vur & Sıfırla', text: 'Edit penceresinden zıplayarak ateş et ve yere inmeden duvarı sıfırlayarak rakibin karşı atışını engelle.', focusTokens: [0,1], focusArrows: [0] }
+              ]
+            }]
+          },
+          guides: [
+            { title: '🧱 Piece Control & Sağ El Avantajı', items: ['<strong>Önce Koni, Sonra Duvar:</strong> Boşluğa koni atıp rakibin kaçış yönünü kilitle, ardından duvarları çek.', '<strong>Peanut Butter Edit:</strong> Duvarın sağ üst 3 karesini editle, zıpla-vur ve hemen duvarı sıfırla.', '<strong>Pump + SMG Switch:</strong> Pompalı atışının ardından beklemeden SMG/AR geç.'] },
+            { title: '🌪️ Endgame & Zone Rotasyonu', items: ['<strong>Deadside Rotasyonu:</strong> Az malzemen varsa kalabalık Frontside yerine sakin Deadside kenarından dön.', '<strong>Malzeme Seçimi:</strong> Son 15 kişide hasar dayanıklılığı en yüksek olan Metal duvar kullan.', '<strong>Storm Surge:</strong> Turnuvalarda alan hasarı yememek için 3. alandan itibaren uzak AR tag\'leri topla.'] }
+          ],
+          quiz: [
+            { q: 'Fortnite\'ta "Piece Control" yaparken rakibin kaçmasını önlemek için duvarlardan önce boş kutuya genellikle ne yerleştirilir?', opts: ['Sadece Zemin', 'Koni (Cone) veya Merdiven', 'Campfire', 'Sadece Pencere'], ans: 1, exp: 'Rakibin bulunduğu kareye veya kaçacağı boşluğa koni/merdiven atmak onun hareketini anında kilitler.' },
+            { q: 'Sağ omuz kamera avantajı nedeniyle Box Fight\'ta en güvenli ve ölümcül edit hangisidir?', opts: ['Ortadan tek pencere açmak', 'Tüm duvarı kaldırmak', 'Peanut Butter (Sağ üst 3 kare üçgen edit)', 'Sol alt köşeyi açmak'], ans: 2, exp: 'Sağ üst 3 kare editi rakibe görüş vermeden zıplayıp yüksek hasar çıkarmanı sağlar.' },
+            { q: 'Endgame Moving Zone\'da malzemen azsa hangi rotasyon hattı hayatta kalma şansını en çok artırır?', opts: ['Herkesin çatıştığı Frontside', 'Haritanın en yüksek tepesindeki kalabalık', 'Daha az oyuncunun bulunduğu sakin Deadside hattı', 'Alan dışında beklemek'], ans: 2, exp: 'Deadside tarafında rakip yoğunluğu düşük olduğu için gereksiz build savaşına girmeden alana ulaşırsın.' },
+            { q: 'Yakın mesafede Pompalı (Shotgun) ateşledikten hemen sonra profesyonel oyuncular neden hemen SMG/AR\'a geçer?', opts: ['Pompalı soğuma süresini beklerken saniyede kesintisiz hasar (DPS) çıkarmak için', 'Mermi tasarrufu için', 'Kalkan basmak için', 'Koni koymayı engellemek için'], ans: 0, exp: 'Pompalı bekleme süresinde SMG ile devam etmek rakibin duvar tutmasını ve karşılık vermesini zorlaştırır.' },
+            { q: 'Son 15 oyuncunun kaldığı yoğun Endgame aşamasında kutu kurarken hangi malzeme öncelikli tercih edilmelidir?', opts: ['Ahşap (Wood)', 'Tuğla (Brick)', 'Metal', 'Malzeme fark etmez'], ans: 2, exp: 'Metal yapı tamamlandığında en yüksek can (HP) değerine sahip olduğu için spamlara karşı en iyi korumayı sağlar.' }
+          ]
+        },
+
+        minecraft: {
+          name: 'Minecraft PvP',
+          maps: [{ id: 'crystal', label: '1.9+ Crystal / NethPot Arenası' }, { id: 'bridge', label: '1.8.9 Köprü / Bedwars Düellosu' }],
+          stamps: [
+            { id: 'me', label: 'Sen', color: '#00f5d4', text: 'SEN' }, { id: 'enemy', label: 'Rakip', color: '#ff2a6d', text: 'RAK' },
+            { id: 'crystal', label: 'Kristal', color: '#e879f9', text: 'CRY' }, { id: 'anchor', label: 'Anchor', color: '#fcee0a', text: 'ANC' }, { id: 'web', label: 'Ağ', color: '#e2e8f0', text: 'WEB' }
+          ],
+          presets: {
+            crystal: [{
+              name: 'Obsidian + End Crystal Ayak Patlatma',
+              tokens: [{ x: 480, y: 210, label: 'RAK', color: '#ff2a6d' }, { x: 480, y: 265, label: 'CRY', color: '#e879f9' }, { x: 480, y: 345, label: 'SEN', color: '#00f5d4' }, { x: 540, y: 230, label: 'WEB', color: '#e2e8f0' }],
+              arrows: [{ x1: 480, y1: 345, x2: 480, y2: 280, color: '#00f5d4' }],
+              steps: [
+                { title: '1. Adım: Rakibi Çukur/Obsidian Hizasına Çek', text: 'Rakibin ayaklarının kristalin patlama merkezinden yüksekte veya aynı blok seviyesinde kalmasını sağla; gerekirse Cobweb ile yavaşlat.', focusTokens: [0,3], focusArrows: [] },
+                { title: '2. Adım: Kendini 1 Blok Alt Seviyeye Al', text: 'Kendi ayakların patlama noktasının altında veya blok arkasında olduğunda alacağın patlama hasarı yarıdan fazla düşer.', focusTokens: [2], focusArrows: [0] },
+                { title: '3. Adım: 200ms Obsidian + Kristal Zinciri', text: 'Obsidian yerleştir, anında End Crystal koy ve sol tıkla patlat. Totemi patlayan rakibi Offhand değişmeden 2. kristalle düşür!', focusTokens: [1,0], focusArrows: [0] }
+              ]
+            }],
+            bridge: [{
+              name: 'Köprü Strafe & Hit-Select Kombosu',
+              tokens: [{ x: 370, y: 250, label: 'SEN', color: '#00f5d4' }, { x: 560, y: 250, label: 'RAK', color: '#ff2a6d' }],
+              arrows: [{ x1: 370, y1: 250, x2: 465, y2: 215, color: '#00f5d4' }, { x1: 465, y1: 215, x2: 550, y2: 245, color: '#fcee0a' }],
+              steps: [
+                { title: '1. Adım: A/D Strafe ile Köşeye Baskı', text: 'Dümdüz W basarak gitme; hafif A veya D açısıyla yaklaşarak rakibi köprünün kenar (Void) tarafına doğru itmeye hazırlan.', focusTokens: [0], focusArrows: [0] },
+                { title: '2. Adım: W-Tap & S-Tap Sprint Reset', text: 'İlk vuruşu yaptıktan hemen sonra W tuşunu 50ms bırak veya S\'ye dokun; böylece 2. vuruşun da tam knockback gücüne sahip olur.', focusTokens: [0,1], focusArrows: [1] },
+                { title: '3. Adım: Jump Reset (Darbe Anında Zıpla)', text: 'Rakip sana vurduğu salise Space basarsan yediğin knockback ciddi oranda düşer ve aşağı uçmadan komboyu geri alırsın.', focusTokens: [0], focusArrows: [] }
+              ]
+            }]
+          },
+          guides: [
+            { title: '⚔️ Sprint Reset & Combo Fiziği', items: ['<strong>W-Tap / S-Tap:</strong> Maksimum knockback sadece koşunun ilk vuruşunda gelir; her vuruşta W\'yi 50ms bırakıp tekrar bas.', '<strong>Hit Selecting:</strong> Rakibin ilk vuruşuna izin verip yere düşerken doğru anda vurarak rakibi havada kilitle.', '<strong>Jump Reset:</strong> Darbe aldığın an zıplamak aldığın knockback mesafesini %40\'a kadar azaltır.'] },
+            { title: '💎 1.9+ Crystal, Balta & 1.8.9', items: ['<strong>Feet Crystal:</strong> Kendi ayakların bloğun/kristalin altında kalırsa rakip tam hasar yerken sen az hasar alırsın.', '<strong>Balta + Kılıç:</strong> Rakip kalkan tutarken Balta ile vur (5sn kalkan kırılır), ardından Critical Kılıç kombosu yap.', '<strong>1.8.9 Rodding:</strong> Kılıç menziline girmeden olta atarak rakibin hızını kes ve ilk vuruş üstünlüğünü kap.'] }
+          ],
+          quiz: [
+            { q: 'Minecraft PvP\'de her vuruşun yüksek Knockback (geri itme) vermesi için yapılan "W-Tap" hareketi ne işe yarar?', opts: ['Zıplamayı iptal eder', 'Sprint (koşma) durumunu sıfırlayarak her vuruşun ilk koşu darbesi gibi ekstra knockback vermesini sağlar', 'Can yeniler', 'Kılıç hasarını %300 artırır'], ans: 1, exp: 'Minecraft\'ta en güçlü knockback sadece sprint başlangıcının ilk darbesinde uygulanır. W bırakıp basmak bunu her vuruşa taşır.' },
+            { q: 'Darbe aldığın salise zıplayarak aldığın Knockback mesafesini ciddi oranda azaltan tekniğin adı nedir?', opts: ['Block Hit', 'Jump Reset', 'Anchor Spam', 'Butterfly Click'], ans: 1, exp: 'Jump Reset, vuruş aldığın an zıplayarak momentumu yukarı ve aşağı dengeleyip geriye savrulmayı %40\'a kadar düşürür.' },
+            { q: '1.9+ Crystal PvP\'de bir End Crystal patlatırken rakibin maksimum hasar alıp senin minimum hasar alman için nasıl konumlanmalısın?', opts: ['Kristalin tam üstüne zıplamalısın', 'Ayakların patlama noktasının altında veya blok arkasında kalacak şekilde rakipten aşağıda durmalısın', 'Kalkan kaldırmadan dümdüz koşmalısın', 'Sadece ok atmalısın'], ans: 1, exp: 'Minecraft patlama hasarı ayak hitbox\'ı üzerinden hesaplanır; ayaklarını blokla veya seviye farkıyla korumak seni kurtarır.' },
+            { q: '1.9+ Sword/Axe PvP\'de rakip kalkan (Shield) tutuyorsa ne yapmalısın?', opts: ['Kılıçla seri tıklamaya devam etmek', 'Baltaya geçip vurarak kalkanı 5 saniye devre dışı (Stun) bırakmak', 'Yemek yemek', 'Geri kaçmak'], ans: 1, exp: 'Balta darbesi rakibin kalkanını 5 saniye boyunca kilitler ve Critical Kılıç vuruşları için kapı açar.' },
+            { q: '1.8.9 Bedwars/Skywars PvP\'de kılıç menziline girmeden rakibe Olta (Fishing Rod) atmanın ana amacı nedir?', opts: ['Rakibin hızını kesip ilk vuruş avantajını ve combo başlangıcını almak', 'Yemek düşürmek', 'Zırh kırmak', 'Blok koymayı hızlandırmak'], ans: 0, exp: 'Olta vuruşu rakibi mini bir knockback ile durdurur ve senin daha kolay combo başlatmanı sağlar.' }
+          ]
+        },
+
+        fc: {
+          name: 'EA Sports FC',
+          maps: [{ id: 'pitch', label: 'Tam Saha Taktik Tahtası' }],
+          stamps: [{ id: 'p', label: 'Kendi Oyuncu', color: '#00f5d4', text: 'FC' }, { id: 'opp', label: 'Rakip', color: '#ff2a6d', text: 'RAK' }, { id: 'ball', label: 'Top', color: '#fcee0a', text: 'TOP' }],
+          presets: {
+            pitch: [
+              {
+                name: '4-2-1-3 Meta Hızlı Kontra',
+                tokens: [
+                  { x: 75, y: 250, label: 'GK', color: '#facc15' },
+                  { x: 210, y: 95, label: 'LB', color: '#00f5d4' }, { x: 195, y: 195, label: 'CB', color: '#00f5d4' },
+                  { x: 195, y: 305, label: 'CB', color: '#00f5d4' }, { x: 210, y: 405, label: 'RB', color: '#00f5d4' },
+                  { x: 355, y: 195, label: 'CDM', color: '#38bdf8' }, { x: 355, y: 305, label: 'CDM', color: '#38bdf8' },
+                  { x: 525, y: 250, label: 'CAM', color: '#38ff7a' },
+                  { x: 675, y: 105, label: 'LW', color: '#ff2a6d' }, { x: 725, y: 250, label: 'ST', color: '#ff2a6d' }, { x: 675, y: 395, label: 'RW', color: '#ff2a6d' }
+                ],
+                arrows: [{ x1: 525, y1: 250, x2: 710, y2: 250, color: '#fcee0a' }, { x1: 675, y1: 105, x2: 760, y2: 185, color: '#00f5d4' }, { x1: 675, y1: 395, x2: 760, y2: 315, color: '#00f5d4' }],
+                steps: [
+                  { title: '1. Adım: Çift CDM Savunma Kilidi', text: 'Top rakipteyken stoperlere geçmek yerine iki CDM oyuncusuyla merkez pas kanallarını L2 Jockey kullanarak kapat.', focusTokens: [5,6], focusArrows: [] },
+                  { title: '2. Adım: CAM Shadow Striker Geçişi', text: 'Topu kazandığın an CAM oyuncunla direkt ST arkasına ara pası veya kanatlara çapraz yön değiştirme pası gönder.', focusTokens: [7], focusArrows: [0] },
+                  { title: '3. Adım: Inside Forward Kanat Koşuları', text: 'LW ve RW oyuncuları içe kat ederek (Inside Forward) ceza sahası köşelerinden Green Timed Finesse veya Trivela şut açısı yakalar.', focusTokens: [8,9,10], focusArrows: [1,2] }
+                ]
+              },
+              {
+                name: '4-4-2 Dengeli & Çift Forvet Baskı',
+                tokens: [
+                  { x: 75, y: 250, label: 'GK', color: '#facc15' },
+                  { x: 220, y: 90, label: 'LB', color: '#00f5d4' }, { x: 205, y: 195, label: 'CB', color: '#00f5d4' },
+                  { x: 205, y: 305, label: 'CB', color: '#00f5d4' }, { x: 220, y: 410, label: 'RB', color: '#00f5d4' },
+                  { x: 455, y: 95, label: 'LM', color: '#38bdf8' }, { x: 430, y: 200, label: 'CM', color: '#38bdf8' },
+                  { x: 430, y: 300, label: 'CM', color: '#38bdf8' }, { x: 455, y: 405, label: 'RM', color: '#38bdf8' },
+                  { x: 700, y: 195, label: 'ST', color: '#ff2a6d' }, { x: 700, y: 305, label: 'ST', color: '#ff2a6d' }
+                ],
+                arrows: [{ x1: 455, y1: 95, x2: 650, y2: 120, color: '#00f5d4' }, { x1: 700, y1: 195, x2: 790, y2: 220, color: '#fcee0a' }],
+                steps: [
+                  { title: '1. Adım: İki Hatlı 4-4 Savunma', text: 'LM ve RM kanatları geriye gelerek 4-4-2 kompakt iki duvar oluşturur; rakip kenarlardan pas bulamaz.', focusTokens: [5,6,7,8], focusArrows: [] },
+                  { title: '2. Adım: Kanat Bindirmesi & Çift ST Ver-Kaçı', text: 'LM ile çizgiden inerken iki forvet ceza sahası içinde stoperleri ikiye böler ve kısa duvar pasıyla gol pozisyonu doğar.', focusTokens: [5,9,10], focusArrows: [0,1] }
+                ]
+              }
+            ]
+          },
+          guides: [
+            { title: '📋 FC IQ Meta & Hücum', items: ['<strong>4-2-1-3 Meta:</strong> 2 Holding CDM + Shadow Striker CAM + Inside Forward kanatlar ile en dengeli diziliş.', '<strong>Green Timed Finishing:</strong> Topa ayak değeceği an şuta 2. kez bas; uzak köşe Finesse/Trivela şutları %90 gol olur.', '<strong>L1 Speed Boost:</strong> L1 basılı yürürken aniden bırakıp R2 + yön vererek patlayıcı hızlanma kazan.'] },
+            { title: '🛡️ Pro Savunma Sırları', items: ['<strong>Stoperi Çekme:</strong> İlk önce CDM ile pas kanallarını kapat (L2 Jockey); stoperi son ana kadar bozma.', '<strong>Right-Stick Switching:</strong> L1 yerine sağ analogla topun önündeki pas kesiciye geç.', '<strong>Player Lock (L3+R3):</strong> Sıkışınca forveti seçip boş alana elle koşu yap ve yapay zekadan ara pas iste.'] }
+          ],
+          quiz: [
+            { q: 'EA Sports FC\'de 4-2-1-3 savunmasında top rakipteyken kontrol edilmesi gereken en doğru bölge neresidir?', opts: ['Stoperleri (CB) orta sahaya fırlatmak', 'CDM oyuncularını kontrol ederek pas kanallarını (L2 Jockey) kapatmak', 'Kaleciyi sürekli çıkarmak', 'Sadece forvetlerle kovalamak'], ans: 1, exp: 'Stoperleri yerinden çıkarmak arkada devasa boşluk bırakır. Önce CDM\'lerle merkez pas yolları kesilmelidir.' },
+            { q: 'Green Timed Finishing (Yeşil Zamanlı Bitiricilik) nasıl yapılır?', opts: ['Şut tuşuna 3 saniye basılı tutarak', 'Şut barını doldurduktan sonra ayak topa değeceği salise tekrar Şut tuşuna basarak', 'Sadece pas tuşuyla şut çekerek', 'Top havadayken R1 tutarak'], ans: 1, exp: 'Ayak topa tam temas edeceği an şuta ikinci kez basmak yeşil zamanlamayı tetikler ve şut keskinliğini artırır.' },
+            { q: 'L1 / LB Speed Boost (Ani Hız Patlaması) mekaniği nasıl tetiklenir?', opts: ['Sürekli L1 basılı tutarak', 'L1 ile topu sürerken aniden L1\'i bırakıp R2 (Sprint) + yön tuşuna basarak', 'Sadece R3 basarak', 'Geri pas atarak'], ans: 1, exp: 'L1 yavaş dribling modundan çıkıp anında R2 sprinte geçmek rakip stoperin yanından fırlamanı sağlar.' },
+            { q: 'L1 yerine Right-Stick (Sağ Analog) ile oyuncu değiştirmenin en büyük avantajı nedir?', opts: ['Daha hızlı şut çeker', 'Topun önündeki ve pas açısındaki tam istediğin oyuncuya hatasız geçmeni sağlar', 'Faul yapmayı engeller', 'Stamina yeniler'], ans: 1, exp: 'L1 bazen yanlış oyuncuyu seçer; sağ analog her zaman yönelttiğin oyuncuyla pas kesmeni sağlar.' },
+            { q: 'Kanatta pas opsiyonu bulamadığında forveti kendin yönlendirip yapay zekadan pas istemeni sağlayan komut hangisidir?', opts: ['L3 + R3 (Player Lock)', 'Sadece Üçgen', 'L2 + R2', 'Start tuşu'], ans: 0, exp: 'Player Lock (L3+R3) ile topu taşıyan oyuncuyu yapay zekaya bırakıp boş alana kaçan forvetini kendin kontrol edersin.' }
+          ]
+        },
+
+        efootball: {
+          name: 'eFootball',
+          maps: [{ id: 'pitch', label: 'eFootball Saha Taktik Tahtası' }],
+          stamps: [{ id: 'p', label: 'Oyuncu', color: '#00f5d4', text: 'EF' }, { id: 'opp', label: 'Rakip', color: '#ff2a6d', text: 'RAK' }, { id: 'ball', label: 'Top', color: '#fcee0a', text: 'TOP' }],
+          presets: {
+            pitch: [
+              {
+                name: '4-2-1-3 Quick Counter (Hızlı Kontra)',
+                tokens: [
+                  { x: 75, y: 250, label: 'GK', color: '#facc15' },
+                  { x: 205, y: 90, label: 'LB', color: '#00f5d4' }, { x: 195, y: 195, label: 'CB', color: '#00f5d4' },
+                  { x: 195, y: 305, label: 'CB', color: '#00f5d4' }, { x: 205, y: 410, label: 'RB', color: '#00f5d4' },
+                  { x: 350, y: 250, label: 'DMF', color: '#38bdf8' }, { x: 430, y: 170, label: 'CMF', color: '#38bdf8' },
+                  { x: 540, y: 250, label: 'AMF', color: '#38ff7a' },
+                  { x: 690, y: 115, label: 'LWF', color: '#ff2a6d' }, { x: 745, y: 250, label: 'CF', color: '#ff2a6d' }, { x: 690, y: 385, label: 'RWF', color: '#ff2a6d' }
+                ],
+                arrows: [{ x1: 430, y1: 170, x2: 690, y2: 120, color: '#00f5d4' }, { x1: 540, y1: 250, x2: 745, y2: 250, color: '#fcee0a' }],
+                steps: [
+                  { title: '1. Adım: Anchor Man DMF + Yüksek Baskı', text: 'Quick Counter yüksek defans çizgisiyle oynar; top kaybında hemen Match-Up (L2) ile rakibi boğ ve DMF ile arkayı süpür.', focusTokens: [5,6], focusArrows: [] },
+                  { title: '2. Adım: AMF & Goal Poacher Dikine Patlama', text: 'Top kazanıldığı an AMF oyuncusu hızlı kanat (LWF/RWF) veya Goal Poacher CF\'nin arkaya koşusuna tek dokunuş ara pası atar.', focusTokens: [7,8,9], focusArrows: [0,1] },
+                  { title: '3. Adım: Double Touch + Stunning Shot', text: 'Ceza sahası yayında stoperi Double Touch ile geçip hemen R2/RT + Şut (Stunning Shot) ile kaleciyi çaresiz bırak.', focusTokens: [9,10], focusArrows: [1] }
+                ]
+              },
+              {
+                name: '4-1-2-3 Possession (Topa Sahip Olma)',
+                tokens: [
+                  { x: 75, y: 250, label: 'GK', color: '#facc15' },
+                  { x: 220, y: 85, label: 'LB', color: '#00f5d4' }, { x: 205, y: 195, label: 'CB', color: '#00f5d4' },
+                  { x: 205, y: 305, label: 'CB', color: '#00f5d4' }, { x: 220, y: 415, label: 'RB', color: '#00f5d4' },
+                  { x: 355, y: 250, label: 'DMF', color: '#38bdf8' },
+                  { x: 495, y: 185, label: 'AMF', color: '#38ff7a' }, { x: 495, y: 315, label: 'AMF', color: '#38ff7a' },
+                  { x: 690, y: 105, label: 'LWF', color: '#ff2a6d' }, { x: 735, y: 250, label: 'CF', color: '#ff2a6d' }, { x: 690, y: 395, label: 'RWF', color: '#ff2a6d' }
+                ],
+                arrows: [{ x1: 495, y1: 185, x2: 630, y2: 220, color: '#38ff7a' }, { x1: 495, y1: 315, x2: 630, y2: 280, color: '#38ff7a' }],
+                steps: [
+                  { title: '1. Adım: Çift AMF Üçgen Kurulumu', text: 'İki AMF oyuncusu orta alanda sürekli pas açısına girerek kanatlarla üçgen kurar; acele pas atmadan rakibin dizilişini boz.', focusTokens: [5,6,7], focusArrows: [0,1] },
+                  { title: '2. Adım: Ver-Kaç (L1+Pas) & Sharp Touch', text: 'AMF ile CF arasında ver-kaç yaparak boşluk açıldığında keskin dokunuş (Sharp Touch) ile ceza sahasına sız.', focusTokens: [6,9], focusArrows: [0] }
+                ]
+              }
+            ]
+          },
+          guides: [
+            { title: '🏟️ Oyun Tarzları & Kadro Rolleri', items: ['<strong>Quick Counter vs Long Ball Counter:</strong> Quick Counter yüksek defans hattıyla boğar; Long Ball Counter defansı geride tutup kontra vurur.', '<strong>Altın Roller:</strong> DMF\'de "Anchor Man", AMF\'de "Hole Player", santrforda "Goal Poacher" seç.', '<strong>60. Dakika Super-Sub:</strong> Yedeklere mutlaka Super-Sub becerili 2 hızlı forvet koy; 2. yarıda fark yaratır.'] },
+            { title: '🔥 Match-Up & Stunning Shot', items: ['<strong>Match-Up (L2/LT):</strong> Sprinte basmadan L2 basılı tutup pas açısını kapat; oyuncu otomatik ara pas keser.', '<strong>Double Touch + Stunning Shot:</strong> Çift dokunuşla stoperi ekarte edip R2 + Şut ile füzeyi gönder.', '<strong>Super Cancel (R1+R2):</strong> Yanlış yapay zeka koşularını kırıp oyuncuyu serbestçe pozisyona sok.'] }
+          ],
+          quiz: [
+            { q: 'eFootball\'da "Long Ball Counter" ile "Quick Counter" taktikleri arasındaki en kritik savunma farkı nedir?', opts: ['Kaleci yer değiştirir', 'Quick Counter çok yüksek defans çizgisiyle önde basarken, Long Ball Counter daha geride güvenli savunma hattı kurar', 'Sadece serbest vuruşları etkiler', 'Hiçbir fark yoktur'], ans: 1, exp: 'Long Ball Counter defans arkasına atılan ara paslara karşı daha güvenlidir; Quick Counter ise ön alan presiyle rakibi boğar.' },
+            { q: 'eFootball savunmasında ara pasları otomatik bacak uzatarak kesmek için hangi tuşu sprint basmadan tutmalısın?', opts: ['Şut tuşu', 'Match-Up (Eşleşme - L2 / LT)', 'Sadece Sağ Analog', 'Orta tuşu'], ans: 1, exp: 'Match-Up (L2) tuşu oyuncunun pas açılarını kapatmasını ve yakınından geçen toplara refleksle müdahale etmesini sağlar.' },
+            { q: 'Double Touch (Çift Dokunuş) ile rakibi geçtikten sonra kaleciyi avlamak için en etkili şut kombosu hangisidir?', opts: ['Yavaş yerden pas', 'Stunning Shot (R2/RT + Şut ile Çarpıcı Şut)', 'Geri pas', 'Taç atışı'], ans: 1, exp: 'Double Touch sonrası açılan kısa boşlukta Stunning Shot çok yüksek hız ve falsoyla gol şansını zirveye taşır.' },
+            { q: 'Yapay zekanın oyuncunu yanlış yöne/koşuya kilitlediği an kontrolü tamamen geri almak için neye basılır?', opts: ['Super Cancel (R1 + R2 / RB + RT)', 'Sadece Üçgen', 'Pause tuşu', 'L1'], ans: 0, exp: 'Super Cancel tüm otomatik yönlendirmeleri iptal ederek topa veya boş alana manuel müdahale etmeni sağlar.' },
+            { q: 'Maçın 60. dakikasından sonra oyuna sokulduğunda istatistikleri ve bitiriciliği gizli bir artış alan oyuncu yeteneği hangisidir?', opts: ['Captaincy', 'Super-Sub (Süper Yedek)', 'Long Throw', 'Track Back'], ans: 1, exp: 'Super-Sub becerisine sahip oyuncular ikinci yarıda oyuna girdiğinde form ve hücum verimliliği bonusu kazanır.' }
+          ]
+        }
+      };
+
+      const AIM_MODES = {
+        gridshot: { badge: 'GRIDSHOT', title: 'Gridshot (Hız & Flick)', desc: 'Aynı anda 3 hedef belirir. Vurduğun an yenisi doğar. Ritim ve hızlı hedef geçişini geliştir.' },
+        microshot: { badge: 'MICROSHOT', title: 'Microshot (Mikro Hassasiyet)', desc: 'Küçük hedefler merkeze yakın çıkar. CS2 kafa hizası mikro düzeltmeleri için birebir.' },
+        tracking: { badge: 'SMOOTH TRACKING', title: 'Tracking (Kesintisiz İzleme)', desc: 'Nişangâhını hareketli hedefin içinde tut! Sol tık basılı tutarak ekstra lazer vuruş bonusu kazan.' },
+        strafebot: { badge: 'STRAFEBOT ADAD', title: 'StrafeBot (ADAD Hareketli Hedef)', desc: 'Sağa-sola ADAD yapan kapsül hedefi vur! Kafa (2x) ve Gövde (1x) isabet alanı içerir.' },
+        spidershot: { badge: 'SPIDERSHOT', title: 'SpiderShot (Merkez Dönüş)', desc: 'Merkez hedefi vur -> Kenardaki hedefe flick at -> Merkeze dön! Kas hafızası temelidir.' },
+        headpeek: { badge: 'CS2 HEADSHOT PEEK', title: 'CS2 Headshot Peek', desc: 'Siper duvarlarının arkasından kafa hizasında peek atan hedefleri saklanmadan önce tek mermide indir!' },
+        flickswitch: { badge: 'FLICK SWITCH', title: 'Flick Switch (Çoklu Hedef Geçiş)', desc: '3 hareketli hedef aynı anda gezer. Her hedefin 3 canı vardır; birini eritip anında diğerine switch at!' },
+        reflexpop: { badge: 'REFLEX POP', title: 'Reflex Pop (Ani Tepki Hedefi)', desc: 'Rastgele bekleme sonrası ekranda aniden beliren hedefi kaybolmadan (0.85sn) vur!' }
+      };
+
+      const ROUTINES = {
+        cs2: [
+          { id: 'r1', text: '5 dk — Aim Lab: Microshot & CS2 Peek (Tepki <300ms)', xp: 30 },
+          { id: 'r2', text: '5 dk — Aim Lab: Flick Switch (Çoklu Hedef Geçişi)', xp: 35 },
+          { id: 'r3', text: '10 dk — Counter-Strafe & Spray Kontrolü (DM)', xp: 40 },
+          { id: 'r4', text: '10 dk — Taktik Tahtasında Sesli Koç ile Mirage/Inferno Lineup', xp: 35 }
+        ],
+        fortnite: [
+          { id: 'f1', text: '5 dk — Aim Lab: Tracking & Flick Switch (SMG/AR)', xp: 30 },
+          { id: 'f2', text: '5 dk — Aim Lab: Gridshot (Hızlı Pompalı Flick)', xp: 30 },
+          { id: 'f3', text: '15 dk — Piece Control & Peanut Butter Edit Freebuild', xp: 45 },
+          { id: 'f4', text: '10 dk — Box Fight & Deadside Endgame Pratiği', xp: 40 }
+        ],
+        minecraft: [
+          { id: 'm1', text: '3 dk — CPS Testi ile Stabil 10+ CPS & Aim Isınması', xp: 25 },
+          { id: 'm2', text: '5 dk — Aim Lab: StrafeBot (Rakip Strafe Takibi)', xp: 35 },
+          { id: 'm3', text: '10 dk — W-Tap / S-Tap & Jump Reset Düellosu', xp: 45 },
+          { id: 'm4', text: '10 dk — Crystal / Totem / Rodding Hızlı Slot Geçişi', xp: 40 }
+        ],
+        fc: [
+          { id: 's1', text: '5 dk — Saf Tepki Testi (Green Timed Finishing Refleksi)', xp: 25 },
+          { id: 's2', text: '10 dk — Taktik Tahtasında Sesli Anlatım + Oyun Sınavı', xp: 35 },
+          { id: 's3', text: '15 dk — Double Touch + Stunning Shot / Timed Finishing', xp: 45 },
+          { id: 's4', text: '10 dk — Sadece Jockey & Match-Up Savunma Maçı', xp: 40 }
+        ]
+      };
+
+      // ================= DURUM YÖNETİMİ (KULLANICIYA ÖZEL KAYIT) =================
+      let state = defaultUserProgress();
+
+      function saveState() {
+        if (currentUser && accounts[currentUser]) {
+          accounts[currentUser].data = state;
+          saveAccounts();
+        }
+        updateGlobalUI();
+      }
+
+      function addXp(amount) {
+        state.xp += amount;
+        saveState();
+      }
+
+      function getRankInfo(xp) {
+        const ranks = [
+          { min: 0, name: 'ÇAYLAK I', next: 150 },
+          { min: 150, name: 'AKADEMİ ÜYESİ', next: 400 },
+          { min: 400, name: 'NİŞANCI II', next: 850 },
+          { min: 850, name: 'CTX PRO ADAYI', next: 1500 },
+          { min: 1500, name: 'CTX ELITE', next: 2500 },
+          { min: 2500, name: 'E-SPOR EFSANESİ', next: 5000 }
+        ];
+        let current = ranks[0];
+        for (const r of ranks) if (xp >= r.min) current = r;
+        const pct = Math.min(100, Math.round(((xp - current.min) / (current.next - current.min)) * 100));
+        return { name: current.name, pct: Math.max(5, pct) };
+      }
+
+      function updateGlobalUI() {
+        const rank = getRankInfo(state.xp);
+        document.getElementById('uiRankName').textContent = rank.name;
+        document.getElementById('uiXpText').textContent = `${state.xp} XP`;
+        document.getElementById('uiXpBar').style.width = `${rank.pct}%`;
+
+        document.getElementById('homeTotalRuns').textContent = state.aimHistory.length;
+        const best = state.aimHistory.reduce((m, r) => Math.max(m, r.score), 0);
+        document.getElementById('homeBestScore').textContent = best;
+        const rtStr = state.bestReaction ? `${state.bestReaction} ms` : '-- ms';
+        const cpsStr = state.bestCps ? state.bestCps.toFixed(1) : '0.0';
+        document.getElementById('homeBestReactCps').textContent = `${rtStr} / ${cpsStr}`;
+
+        const passedQuizzes = Object.values(state.quizBest).filter(v => v >= 3).length;
+        document.getElementById('homeQuizSummary').textContent = `${passedQuizzes} / 5`;
+
+        renderAimHistory();
+      }
+
+      // ================= WEB AUDIO SENTEZLEYİCİ =================
+      let audioCtx = null;
+      function playSound(type) {
+        if (!document.getElementById('aimSoundToggle')?.checked) return;
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          if (type === 'hit') {
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(680, now); osc.frequency.exponentialRampToValueAtTime(1180, now + 0.06);
+            gain.gain.setValueAtTime(0.18, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.start(now); osc.stop(now + 0.08);
+          } else if (type === 'headshot') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(1550, now); osc.frequency.exponentialRampToValueAtTime(2500, now + 0.05);
+            gain.gain.setValueAtTime(0.22, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+            osc.start(now); osc.stop(now + 0.11);
+          } else if (type === 'miss') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(135, now); osc.frequency.exponentialRampToValueAtTime(75, now + 0.08);
+            gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+            osc.start(now); osc.stop(now + 0.09);
+          } else if (type === 'finish') {
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1); osc.frequency.setValueAtTime(784, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            osc.start(now); osc.stop(now + 0.45);
+          }
+        } catch (e) {}
+      }
+
+      // ================= NAVİGASYON =================
+      function switchSection(id) {
+        if (!currentUser) return;
+        if (aim.running && id !== 'sec-aimlab') finishAimSession(true);
+        if (id !== 'sec-tactics') stopBriefing();
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.sec === id));
+        if (id === 'sec-tactics') drawTacticBoard();
+        if (id === 'sec-aimlab') renderAimPreviewIdle();
+      }
+
+      function openTacticGame(game) { switchSection('sec-tactics'); selectTacticGame(game); }
+
+      // ================= CROSSHAIR RENDERER =================
+      function getChConfig() {
+        return {
+          style: document.getElementById('chStyle').value, color: document.getElementById('chColor').value,
+          size: Number(document.getElementById('chSize').value), thick: Number(document.getElementById('chThick').value),
+          gap: Number(document.getElementById('chGap').value), outline: document.getElementById('chOutline').checked
+        };
+      }
+
+      function drawCrosshair(ctx, x, y, hitFlash = 0) {
+        const ch = getChConfig();
+        ctx.save(); ctx.translate(x, y);
+        const drawLines = (strokeStyle, extra) => {
+          ctx.strokeStyle = strokeStyle; ctx.fillStyle = strokeStyle; ctx.lineWidth = ch.thick + extra; ctx.lineCap = 'butt';
+          if (ch.style === 'cross' || ch.style === 'crossdot') {
+            ctx.beginPath();
+            ctx.moveTo(-ch.gap - ch.size, 0); ctx.lineTo(-ch.gap, 0); ctx.moveTo(ch.gap, 0); ctx.lineTo(ch.gap + ch.size, 0);
+            ctx.moveTo(0, -ch.gap - ch.size); ctx.lineTo(0, -ch.gap); ctx.moveTo(0, ch.gap); ctx.lineTo(0, ch.gap + ch.size);
+            ctx.stroke();
+          }
+          if (ch.style === 'dot' || ch.style === 'crossdot' || ch.style === 'circle') {
+            ctx.beginPath(); ctx.arc(0, 0, Math.max(1.8, ch.thick * 0.85) + extra * 0.4, 0, Math.PI * 2); ctx.fill();
+          }
+          if (ch.style === 'circle') { ctx.beginPath(); ctx.arc(0, 0, ch.gap + ch.size * 0.75, 0, Math.PI * 2); ctx.stroke(); }
+        };
+        if (ch.outline) drawLines('#000000', 2);
+        drawLines(ch.color, 0);
+        if (hitFlash > 0) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${hitFlash})`; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(-14, -14); ctx.lineTo(-6, -6); ctx.moveTo(14, -14); ctx.lineTo(6, -6);
+          ctx.moveTo(-14, 14); ctx.lineTo(-6, 6); ctx.moveTo(14, 14); ctx.lineTo(6, 6); ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function updateCrosshair() {
+        const pctx = document.getElementById('crosshairPreview').getContext('2d');
+        pctx.clearRect(0, 0, 110, 110); drawCrosshair(pctx, 55, 55, 0);
+      }
+
+      function toggleCrosshairDrawer() { document.getElementById('crosshairDrawer').classList.toggle('open'); updateCrosshair(); }
+
+      // ================= GELİŞMİŞ AIM LAB MOTORU =================
+      const LOGICAL_W = 1000, LOGICAL_H = 540, DEG2RAD = Math.PI / 180;
+      const aim = {
+        mode: 'gridshot', running: false, paused: false, isFps: false,
+        camYaw: 0, camPitch: 0, mouseX: LOGICAL_W / 2, mouseY: LOGICAL_H / 2, mouseDown: false,
+        targets: [], walls: [], particles: [], floatTexts: [], shotOffsets: [],
+        score: 0, hits: 0, misses: 0, streak: 0, reactions: [],
+        spiderCenterNext: true, trackTotalTicks: 0, trackHitTicks: 0, trackLaserCd: 0,
+        reflexWaitTimer: 0, timeLeft: 60, duration: 60, lastTs: 0, hitFlash: 0, missFlash: 0,
+        rafId: null, lastSlot: -1
+      };
+
+      const aimCanvas = document.getElementById('aimCanvas');
+      const actx = aimCanvas.getContext('2d');
+
+      function getFocal() { return (LOGICAL_W / 2) / Math.tan(((Number(document.getElementById('aimFovVal').value) || 80) / 2) * DEG2RAD); }
+      function getDiffParams() {
+        const d = document.getElementById('aimDifficulty').value;
+        if (d === 'pro') return { sizeMult: 0.82, speedMult: 1.32, scoreMult: 1.2 };
+        if (d === 'godlike') return { sizeMult: 0.66, speedMult: 1.62, scoreMult: 1.5 };
+        return { sizeMult: 1.0, speedMult: 1.0, scoreMult: 1.0 };
+      }
+      function resizeAimCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        aimCanvas.width = LOGICAL_W * dpr; aimCanvas.height = LOGICAL_H * dpr;
+        actx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function projectAngle(tYaw, tPitch) {
+        const focal = getFocal();
+        return { x: LOGICAL_W / 2 + Math.tan((tYaw - aim.camYaw) * DEG2RAD) * focal, y: LOGICAL_H / 2 - Math.tan((tPitch - aim.camPitch) * DEG2RAD) * focal };
+      }
+      function getCsEquivalentSens() {
+        const game = document.getElementById('aimRefGame').value;
+        const val = Math.max(0.05, Number(document.getElementById('aimSensVal').value) || 1.5);
+        if (game === 'fortnite') return val / 3.960396;
+        if (game === 'ow2') return val / 3.333333;
+        return val;
+      }
+      function syncAimSens() {
+        const csSens = getCsEquivalentSens(), dpi = Math.max(100, Number(document.getElementById('aimDpiVal').value) || 800);
+        const cm360 = (360 / (dpi * csSens * 0.022)) * 2.54;
+        document.getElementById('aimSensInfo').textContent = `Aktif Hassasiyet: ${cm360.toFixed(1)} cm/360° • eDPI (CS2): ${Math.round(dpi * csSens)}`;
+      }
+      function selectAimMode(mode) {
+        aim.mode = mode;
+        document.querySelectorAll('#aimModePills .mode-pill').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+        const info = AIM_MODES[mode];
+        document.getElementById('aimModeBadge').textContent = info.badge;
+        document.getElementById('aimModeTitle').textContent = info.title;
+        document.getElementById('aimModeDesc').textContent = info.desc;
+        if (aim.running) finishAimSession(true);
+        renderAimPreviewIdle();
+      }
+      document.getElementById('aimModePills').addEventListener('click', (e) => {
+        const btn = e.target.closest('.mode-pill'); if (btn) selectAimMode(btn.dataset.mode);
+      });
+
+      function spawnGridTarget(isMicro) {
+        const { sizeMult } = getDiffParams(), slots = [];
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) slots.push({ yaw: isMicro ? -7 + c * 4.6 : -21 + c * 14, pitch: isMicro ? 5 - r * 5 : 11 - r * 11 });
+        const used = new Set(aim.targets.map(t => t.slot)), avail = slots.map((_, i) => i).filter(i => !used.has(i) && i !== aim.lastSlot);
+        const pick = avail[Math.floor(Math.random() * avail.length)] ?? 0; aim.lastSlot = pick;
+        aim.targets.push({ slot: pick, yaw: slots[pick].yaw + (Math.random() - 0.5) * (isMicro ? 2.4 : 4), pitch: slots[pick].pitch + (Math.random() - 0.5) * (isMicro ? 2 : 3), rDeg: (isMicro ? 1.55 : 2.95) * sizeMult, spawnTs: performance.now(), kind: 'orb' });
+      }
+      function spawnSpiderTarget() {
+        const { sizeMult } = getDiffParams(); let yaw = 0, pitch = 0, isCenter = aim.spiderCenterNext;
+        if (!isCenter) { const ang = Math.random() * Math.PI * 2, dist = 14 + Math.random() * 12; yaw = Math.cos(ang) * dist; pitch = Math.sin(ang) * (dist * 0.55); }
+        aim.spiderCenterNext = !aim.spiderCenterNext;
+        aim.targets = [{ yaw, pitch, rDeg: (isCenter ? 2.5 : 2.3) * sizeMult, spawnTs: performance.now(), kind: 'orb', isCore: isCenter }];
+      }
+      function spawnTrackingTarget() {
+        const { sizeMult } = getDiffParams();
+        aim.targets = [{ yaw: 0, pitch: 0, rDeg: 2.8 * sizeMult, phaseX: Math.random() * 6, phaseY: Math.random() * 6, spawnTs: performance.now(), kind: 'track' }];
+      }
+      function spawnStrafeBot() {
+        const { sizeMult, speedMult } = getDiffParams();
+        aim.targets = [{ yaw: 0, pitch: -1, vx: 18 * speedMult, dirTimer: 0.7, rDeg: 2.2 * sizeMult, spawnTs: performance.now(), kind: 'bot' }];
+      }
+      function setupHeadPeekWalls() { aim.walls = [{ yaw: -16, pitch: -1, wDeg: 9, hDeg: 13, side: 1 }, { yaw: 16, pitch: -1, wDeg: 9, hDeg: 13, side: -1 }, { yaw: 0, pitch: -2, wDeg: 8, hDeg: 11, side: 1 }]; }
+      function spawnHeadPeekTarget() {
+        const { sizeMult, speedMult } = getDiffParams(), w = aim.walls[Math.floor(Math.random() * aim.walls.length)];
+        const dir = w.yaw === 0 ? (Math.random() > 0.5 ? 1 : -1) : w.side;
+        aim.targets = [{ yaw: w.yaw, baseYaw: w.yaw, targetYaw: w.yaw + dir * (w.wDeg * 0.5 + 2.6), pitch: w.pitch + w.hDeg * 0.28, rDeg: 1.75 * sizeMult, spawnTs: performance.now(), state: 'out', life: 0, maxHold: 1.15 / speedMult, kind: 'peek' }];
+      }
+      function spawnFlickSwitchTarget() {
+        const { sizeMult, speedMult } = getDiffParams(), ang = Math.random() * Math.PI * 2, spd = (8 + Math.random() * 6) * speedMult;
+        aim.targets.push({ yaw: (Math.random() - 0.5) * 34, pitch: (Math.random() - 0.5) * 18, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd * 0.65, rDeg: 2.4 * sizeMult, hp: 3, maxHp: 3, spawnTs: performance.now(), kind: 'switch' });
+      }
+      function queueReflexPop() { aim.targets = []; aim.reflexWaitTimer = 0.35 + Math.random() * 0.8; }
+      function spawnReflexPopTarget() {
+        const { sizeMult, speedMult } = getDiffParams();
+        aim.targets = [{ yaw: (Math.random() - 0.5) * 36, pitch: (Math.random() - 0.5) * 20, rDeg: 2.75 * sizeMult, baseRDeg: 2.75 * sizeMult, life: 0, maxLife: 0.9 / speedMult, spawnTs: performance.now(), kind: 'reflex' }];
+      }
+
+      function startAimSession() {
+        resizeAimCanvas();
+        aim.isFps = document.getElementById('aimControlType').value === 'fps';
+        aim.duration = Number(document.getElementById('aimDuration').value); aim.timeLeft = aim.duration;
+        aim.score = 0; aim.hits = 0; aim.misses = 0; aim.streak = 0;
+        aim.reactions = []; aim.shotOffsets = []; aim.particles = []; aim.floatTexts = [];
+        aim.targets = []; aim.walls = []; aim.camYaw = 0; aim.camPitch = 0;
+        aim.trackTotalTicks = 0; aim.trackHitTicks = 0; aim.spiderCenterNext = true;
+        aim.running = true; aim.paused = false;
+        document.getElementById('aimStartOverlay').classList.add('hidden');
+        document.getElementById('aimPauseOverlay').classList.add('hidden');
+        document.getElementById('aimReportOverlay').classList.add('hidden');
+
+        if (aim.mode === 'gridshot') for (let i = 0; i < 3; i++) spawnGridTarget(false);
+        else if (aim.mode === 'microshot') for (let i = 0; i < 3; i++) spawnGridTarget(true);
+        else if (aim.mode === 'tracking') spawnTrackingTarget();
+        else if (aim.mode === 'strafebot') spawnStrafeBot();
+        else if (aim.mode === 'spidershot') spawnSpiderTarget();
+        else if (aim.mode === 'headpeek') { setupHeadPeekWalls(); spawnHeadPeekTarget(); }
+        else if (aim.mode === 'flickswitch') for (let i = 0; i < 3; i++) spawnFlickSwitchTarget();
+        else if (aim.mode === 'reflexpop') queueReflexPop();
+
+        aimCanvas.style.cursor = 'none';
+        if (aim.isFps) { try { aimCanvas.requestPointerLock(); } catch (e) {} }
+        aim.lastTs = performance.now();
+        if (aim.rafId) cancelAnimationFrame(aim.rafId);
+        aim.rafId = requestAnimationFrame(aimLoop);
+      }
+
+      function resumePointerLock() {
+        aim.paused = false; document.getElementById('aimPauseOverlay').classList.add('hidden');
+        try { aimCanvas.requestPointerLock(); } catch (e) {} aim.lastTs = performance.now();
+      }
+      document.addEventListener('pointerlockchange', () => {
+        if (aim.running && aim.isFps && document.pointerLockElement !== aimCanvas) {
+          aim.paused = true; document.getElementById('aimPauseOverlay').classList.remove('hidden');
+        }
+      });
+
+      function addBurst(x, y, color, text, textColor = '#fff') {
+        for (let i = 0; i < 12; i++) {
+          const ang = Math.random() * Math.PI * 2, spd = 80 + Math.random() * 190;
+          aim.particles.push({ x, y, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, life: 0.32, color });
+        }
+        if (text) aim.floatTexts.push({ x, y: y - 10, text, color: textColor, life: 0.65 });
+      }
+
+      function handleAimShot(mx, my) {
+        if (!aim.running || aim.paused || aim.mode === 'tracking') return;
+        const focal = getFocal(), { scoreMult } = getDiffParams();
+        const aimX = aim.isFps ? LOGICAL_W / 2 : mx, aimY = aim.isFps ? LOGICAL_H / 2 : my;
+        const tColor = document.getElementById('aimTargetColor').value, now = performance.now();
+        let hitIdx = -1, isHead = false, nearest = null, nearestDist = Infinity;
+
+        for (let i = aim.targets.length - 1; i >= 0; i--) {
+          const t = aim.targets[i], p = projectAngle(t.yaw, t.pitch), rPx = Math.tan(t.rDeg * DEG2RAD) * focal;
+          const dCenter = Math.hypot(aimX - p.x, aimY - p.y);
+          if (dCenter < nearestDist) { nearestDist = dCenter; nearest = { p, rPx }; }
+          if (t.kind === 'bot') {
+            const headPos = projectAngle(t.yaw, t.pitch + t.rDeg * 1.45), headR = Math.tan((t.rDeg * 0.68) * DEG2RAD) * focal;
+            if (Math.hypot(aimX - headPos.x, aimY - headPos.y) <= headR + 2) { hitIdx = i; isHead = true; break; }
+            const bodyW = rPx * 1.5, bodyH = rPx * 2.5;
+            if (Math.abs(aimX - p.x) <= bodyW / 2 && aimY >= p.y - bodyH * 0.45 && aimY <= p.y + bodyH * 0.65) { hitIdx = i; break; }
+          } else if (dCenter <= rPx + 2) { hitIdx = i; if (t.kind === 'peek') isHead = true; break; }
+        }
+
+        if (nearest && nearest.rPx > 0) {
+          aim.shotOffsets.push({ dx: (aimX - nearest.p.x) / nearest.rPx, dy: (aimY - nearest.p.y) / nearest.rPx, hit: hitIdx !== -1 });
+        }
+
+        if (hitIdx !== -1) {
+          const t = aim.targets[hitIdx], p = projectAngle(t.yaw, t.pitch), rt = Math.round(now - t.spawnTs);
+          if (t.kind !== 'bot' && t.kind !== 'switch') aim.reactions.push(rt);
+          aim.hits++; aim.streak++; aim.hitFlash = 1;
+          if (t.kind === 'switch') {
+            t.hp--;
+            if (t.hp > 0) { const dp = Math.round(65 * scoreMult); aim.score += dp; playSound('hit'); addBurst(p.x, p.y, '#00f5d4', `+${dp}`, '#00f5d4'); return; }
+          }
+          let basePts = isHead ? 200 : 100;
+          if (t.kind === 'reflex') basePts = Math.max(120, Math.round(320 - rt * 0.25));
+          if (t.kind === 'switch') basePts = 175;
+          const pts = Math.round((basePts + Math.min(80, aim.streak * 4)) * scoreMult);
+          aim.score += pts; playSound(isHead || t.kind === 'reflex' ? 'headshot' : 'hit');
+          addBurst(p.x, p.y, isHead ? '#fcee0a' : tColor, isHead ? `HS! +${pts}` : (t.kind === 'reflex' ? `${rt}ms +${pts}` : `+${pts}`), isHead ? '#fcee0a' : '#00f5d4');
+
+          if (aim.mode === 'gridshot') { aim.targets.splice(hitIdx, 1); spawnGridTarget(false); }
+          else if (aim.mode === 'microshot') { aim.targets.splice(hitIdx, 1); spawnGridTarget(true); }
+          else if (aim.mode === 'spidershot') spawnSpiderTarget();
+          else if (aim.mode === 'headpeek') spawnHeadPeekTarget();
+          else if (aim.mode === 'flickswitch') { aim.targets.splice(hitIdx, 1); spawnFlickSwitchTarget(); }
+          else if (aim.mode === 'reflexpop') queueReflexPop();
+          else if (aim.mode === 'strafebot') t.vx = (Math.random() > 0.5 ? 1 : -1) * (16 + Math.random() * 12);
+        } else {
+          aim.misses++; aim.streak = 0; aim.missFlash = 1; aim.score = Math.max(0, aim.score - 25); playSound('miss');
+        }
+      }
+
+      aimCanvas.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        aim.mouseDown = true;
+        const rect = aimCanvas.getBoundingClientRect();
+        aim.mouseX = ((e.clientX - rect.left) / rect.width) * LOGICAL_W;
+        aim.mouseY = ((e.clientY - rect.top) / rect.height) * LOGICAL_H;
+        handleAimShot(aim.mouseX, aim.mouseY);
+      });
+      window.addEventListener('mouseup', () => { aim.mouseDown = false; });
+      aimCanvas.addEventListener('mousemove', (e) => {
+        if (aim.isFps && document.pointerLockElement === aimCanvas && aim.running && !aim.paused) {
+          const csSens = getCsEquivalentSens();
+          aim.camYaw = Math.max(-45, Math.min(45, aim.camYaw + e.movementX * 0.022 * csSens));
+          aim.camPitch = Math.max(-26, Math.min(26, aim.camPitch - e.movementY * 0.022 * csSens));
+        } else {
+          const rect = aimCanvas.getBoundingClientRect();
+          aim.mouseX = ((e.clientX - rect.left) / rect.width) * LOGICAL_W;
+          aim.mouseY = ((e.clientY - rect.top) / rect.height) * LOGICAL_H;
+        }
+      });
+
+      function updateAim(dt, now) {
+        if (aim.paused) return;
+        aim.timeLeft -= dt;
+        if (aim.timeLeft <= 0) { aim.timeLeft = 0; finishAimSession(false); return; }
+        const focal = getFocal(), { speedMult, scoreMult } = getDiffParams();
+        aim.hitFlash = Math.max(0, aim.hitFlash - dt * 5); aim.missFlash = Math.max(0, aim.missFlash - dt * 4);
+        const aimX = aim.isFps ? LOGICAL_W / 2 : aim.mouseX, aimY = aim.isFps ? LOGICAL_H / 2 : aim.mouseY;
+
+        if (aim.mode === 'reflexpop' && aim.targets.length === 0) {
+          aim.reflexWaitTimer -= dt; if (aim.reflexWaitTimer <= 0) spawnReflexPopTarget();
+        }
+        for (let i = aim.targets.length - 1; i >= 0; i--) {
+          const t = aim.targets[i];
+          if (t.kind === 'track') {
+            const sec = (now / 1000) * speedMult;
+            t.yaw = Math.sin(sec * 1.45 + t.phaseX) * 20 + Math.sin(sec * 2.6) * 5;
+            t.pitch = Math.cos(sec * 1.2 + t.phaseY) * 10 + Math.sin(sec * 2.1) * 3;
+            const p = projectAngle(t.yaw, t.pitch), rPx = Math.tan(t.rDeg * DEG2RAD) * focal;
+            aim.trackTotalTicks++;
+            if (Math.hypot(aimX - p.x, aimY - p.y) <= rPx + 2) {
+              aim.trackHitTicks++; aim.score += Math.round((aim.mouseDown ? 18 : 10) * scoreMult);
+              aim.trackLaserCd -= dt; if (aim.mouseDown && aim.trackLaserCd <= 0) { playSound('hit'); aim.trackLaserCd = 0.11; }
+            }
+          } else if (t.kind === 'bot') {
+            t.dirTimer -= dt;
+            if (t.dirTimer <= 0) { t.vx = (Math.random() > 0.5 ? 1 : -1) * (13 + Math.random() * 14) * speedMult; t.dirTimer = 0.32 + Math.random() * 0.7; }
+            t.yaw += t.vx * dt;
+            if (t.yaw > 24) { t.yaw = 24; t.vx = -Math.abs(t.vx); } if (t.yaw < -24) { t.yaw = -24; t.vx = Math.abs(t.vx); }
+          } else if (t.kind === 'peek') {
+            t.life += dt;
+            if (t.state === 'out') { t.yaw += (t.targetYaw - t.yaw) * Math.min(1, dt * 15); if (t.life > t.maxHold) t.state = 'in'; }
+            else { t.yaw += (t.baseYaw - t.yaw) * Math.min(1, dt * 12); if (Math.abs(t.yaw - t.baseYaw) < 0.4) { aim.misses++; aim.streak = 0; spawnHeadPeekTarget(); break; } }
+          } else if (t.kind === 'switch') {
+            t.yaw += t.vx * dt; t.pitch += t.vy * dt;
+            if (t.yaw > 24 || t.yaw < -24) t.vx *= -1; if (t.pitch > 13 || t.pitch < -13) t.vy *= -1;
+          } else if (t.kind === 'reflex') {
+            t.life += dt; t.rDeg = t.baseRDeg * Math.max(0.45, 1 - (t.life / t.maxLife) * 0.5);
+            if (t.life >= t.maxLife) { aim.misses++; aim.streak = 0; playSound('miss'); queueReflexPop(); break; }
+          }
+        }
+        aim.particles = aim.particles.filter(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; return p.life > 0; });
+        aim.floatTexts = aim.floatTexts.filter(f => { f.y -= 38 * dt; f.life -= dt; return f.life > 0; });
+
+        const elapsedTotal = Math.max(0.5, aim.duration - aim.timeLeft);
+        const acc = aim.mode === 'tracking' ? (aim.trackTotalTicks ? Math.round((aim.trackHitTicks / aim.trackTotalTicks) * 100) : 100) : (aim.hits + aim.misses > 0 ? Math.round((aim.hits / (aim.hits + aim.misses)) * 100) : 100);
+        const avgRt = aim.reactions.length ? Math.round(aim.reactions.reduce((a, b) => a + b, 0) / aim.reactions.length) : 0;
+        document.getElementById('hudScore').textContent = aim.score;
+        document.getElementById('hudAcc').textContent = `${acc}%`;
+        document.getElementById('hudReaction').textContent = `${avgRt} ms`;
+        document.getElementById('hudStreak').textContent = aim.streak;
+        document.getElementById('hudKps').textContent = (aim.hits / elapsedTotal).toFixed(1);
+        document.getElementById('hudTimer').textContent = `${Math.ceil(aim.timeLeft)}s`;
+      }
+
+      function renderAimScene() {
+        const focal = getFocal();
+        actx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
+        const bgGrad = actx.createRadialGradient(LOGICAL_W / 2, LOGICAL_H / 2, 40, LOGICAL_W / 2, LOGICAL_H / 2, 650);
+        bgGrad.addColorStop(0, '#0f1628'); bgGrad.addColorStop(1, '#04060c');
+        actx.fillStyle = bgGrad; actx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+
+        actx.strokeStyle = 'rgba(0, 245, 212, 0.08)'; actx.lineWidth = 1;
+        for (let yw = -50; yw <= 50; yw += 10) { const pTop = projectAngle(yw, 30), pBot = projectAngle(yw, -30); actx.beginPath(); actx.moveTo(pTop.x, pTop.y); actx.lineTo(pBot.x, pBot.y); actx.stroke(); }
+        for (let pt = -30; pt <= 30; pt += 10) { const pL = projectAngle(-50, pt), pR = projectAngle(50, pt); actx.beginPath(); actx.moveTo(pL.x, pL.y); actx.lineTo(pR.x, pR.y); actx.stroke(); }
+
+        if (aim.mode === 'reflexpop' && aim.targets.length === 0 && aim.running) {
+          actx.fillStyle = 'rgba(252, 238, 10, 0.65)'; actx.font = 'bold 16px Orbitron, sans-serif'; actx.textAlign = 'center';
+          actx.fillText('ODAĞINI KORU — HEDEF BEKLENİYOR...', LOGICAL_W / 2, 42);
+        }
+        const tColor = document.getElementById('aimTargetColor').value;
+        for (const t of aim.targets) {
+          const p = projectAngle(t.yaw, t.pitch), rPx = Math.tan(t.rDeg * DEG2RAD) * focal;
+          if (t.kind === 'bot') {
+            const bodyW = rPx * 1.45, bodyH = rPx * 2.4;
+            actx.fillStyle = 'rgba(255, 42, 109, 0.85)'; actx.strokeStyle = '#ffffff'; actx.lineWidth = 2;
+            actx.beginPath(); actx.roundRect(p.x - bodyW / 2, p.y - bodyH * 0.45, bodyW, bodyH, 8); actx.fill(); actx.stroke();
+            const headPos = projectAngle(t.yaw, t.pitch + t.rDeg * 1.45), headR = Math.tan((t.rDeg * 0.68) * DEG2RAD) * focal;
+            actx.fillStyle = '#fcee0a'; actx.beginPath(); actx.arc(headPos.x, headPos.y, headR, 0, Math.PI * 2); actx.fill(); actx.stroke();
+          } else {
+            const fillCol = t.isCore ? '#ff2a6d' : (t.kind === 'reflex' ? '#fcee0a' : tColor);
+            actx.save(); actx.shadowColor = fillCol; actx.shadowBlur = 18;
+            const orbGrad = actx.createRadialGradient(p.x - rPx * 0.3, p.y - rPx * 0.3, rPx * 0.1, p.x, p.y, rPx);
+            orbGrad.addColorStop(0, '#ffffff'); orbGrad.addColorStop(0.35, fillCol); orbGrad.addColorStop(1, '#09101f');
+            actx.fillStyle = orbGrad; actx.beginPath(); actx.arc(p.x, p.y, rPx, 0, Math.PI * 2); actx.fill();
+            actx.strokeStyle = 'rgba(255,255,255,0.65)'; actx.lineWidth = 1.5; actx.stroke();
+            if (t.kind === 'switch') {
+              actx.strokeStyle = '#fcee0a'; actx.lineWidth = 4; actx.beginPath();
+              actx.arc(p.x, p.y, rPx + 6, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * (t.hp / t.maxHp))); actx.stroke();
+            }
+            actx.restore();
+          }
+        }
+        for (const w of aim.walls) {
+          const p = projectAngle(w.yaw, w.pitch), wPx = Math.tan(w.wDeg * DEG2RAD) * focal, hPx = Math.tan(w.hDeg * DEG2RAD) * focal;
+          actx.fillStyle = '#182238'; actx.strokeStyle = '#384b73'; actx.lineWidth = 2;
+          actx.fillRect(p.x - wPx / 2, p.y - hPx / 2, wPx, hPx); actx.strokeRect(p.x - wPx / 2, p.y - hPx / 2, wPx, hPx);
+        }
+        for (const pt of aim.particles) { actx.globalAlpha = Math.max(0, pt.life * 3); actx.fillStyle = pt.color; actx.beginPath(); actx.arc(pt.x, pt.y, 3.2, 0, Math.PI * 2); actx.fill(); }
+        actx.globalAlpha = 1;
+        actx.font = 'bold 16px Orbitron, sans-serif'; actx.textAlign = 'center';
+        for (const f of aim.floatTexts) { actx.globalAlpha = Math.min(1, f.life * 2); actx.fillStyle = f.color; actx.fillText(f.text, f.x, f.y); }
+        actx.globalAlpha = 1;
+        if (aim.missFlash > 0) { actx.strokeStyle = `rgba(255, 42, 109, ${aim.missFlash * 0.6})`; actx.lineWidth = 8; actx.strokeRect(4, 4, LOGICAL_W - 8, LOGICAL_H - 8); }
+        drawCrosshair(actx, aim.isFps ? LOGICAL_W / 2 : aim.mouseX, aim.isFps ? LOGICAL_H / 2 : aim.mouseY, aim.hitFlash);
+      }
+
+      function aimLoop(now) {
+        if (!aim.running) return;
+        const dt = Math.min((now - aim.lastTs) / 1000, 0.05); aim.lastTs = now;
+        updateAim(dt, now);
+        if (aim.running) { renderAimScene(); aim.rafId = requestAnimationFrame(aimLoop); }
+      }
+      function renderAimPreviewIdle() { resizeAimCanvas(); aim.camYaw = 0; aim.camPitch = 0; aim.targets = []; aim.walls = []; renderAimScene(); }
+
+      function finishAimSession(aborted = false) {
+        aim.running = false; if (aim.rafId) cancelAnimationFrame(aim.rafId);
+        if (document.pointerLockElement === aimCanvas) { try { document.exitPointerLock(); } catch (e) {} }
+        aimCanvas.style.cursor = 'crosshair'; document.getElementById('aimPauseOverlay').classList.add('hidden');
+        if (aborted) { document.getElementById('aimStartOverlay').classList.remove('hidden'); return; }
+
+        playSound('finish');
+        const elapsed = Math.max(1, aim.duration - aim.timeLeft);
+        const acc = aim.mode === 'tracking' ? (aim.trackTotalTicks ? Math.round((aim.trackHitTicks / aim.trackTotalTicks) * 100) : 0) : (aim.hits + aim.misses > 0 ? Math.round((aim.hits / (aim.hits + aim.misses)) * 100) : 0);
+        const avgRt = aim.reactions.length ? Math.round(aim.reactions.reduce((a, b) => a + b, 0) / aim.reactions.length) : 0;
+        const kps = (aim.hits / elapsed).toFixed(2);
+        let grade = 'C';
+        if (aim.score >= 8500 && acc >= 85) grade = 'S+'; else if (aim.score >= 6000 && acc >= 80) grade = 'S'; else if (aim.score >= 4000 && acc >= 70) grade = 'A'; else if (aim.score >= 2200) grade = 'B';
+
+        const earnedXp = Math.max(15, Math.round(aim.score / 180) + Math.round(acc / 5));
+        addXp(earnedXp);
+        state.aimHistory.unshift({ mode: AIM_MODES[aim.mode].badge, score: aim.score, acc, rt: avgRt, kps, grade });
+        state.aimHistory = state.aimHistory.slice(0, 15); saveState();
+
+        document.getElementById('repModeTag').textContent = AIM_MODES[aim.mode].badge;
+        document.getElementById('repGrade').textContent = grade;
+        document.getElementById('repScore').textContent = aim.score;
+        document.getElementById('repAcc').textContent = `${acc}%`;
+        document.getElementById('repReact').textContent = avgRt ? `${avgRt} ms` : 'Tracking';
+        document.getElementById('repKpsXp').textContent = `${kps} / +${earnedXp}`;
+
+        let tip = 'Koç Analizi: Çok dengeli bir tur! Her gün 10 dk Microshot + Flick Switch ile kas hafızanı sağlamlaştır.';
+        if (acc < 72 && aim.mode !== 'tracking') tip = 'Koç Analizi: Hedefe tam oturmadan ateş ediyorsun. Önce doğruluğa (%88+) odaklan, hız arkasından gelecektir.';
+        else if (avgRt > 350) tip = 'Koç Analizi: Tepki süreni düşürmek için Reflex Pop ve SpiderShot modlarında 30 saniyelik hızlı setler at.';
+        else if (acc >= 90 && aim.score >= 6500) tip = 'Koç Analizi: Pro isabet! Zorluğu "Pro" veya "Godlike" seviyesine çekip kendini zorla.';
+        document.getElementById('repCoachTip').textContent = tip;
+
+        drawReportChart(); drawScatterRadar();
+        document.getElementById('aimReportOverlay').classList.remove('hidden');
+      }
+
+      function drawReportChart() {
+        const c = document.getElementById('aimReportChart'), g = c.getContext('2d');
+        g.clearRect(0, 0, c.width, c.height); const pts = aim.reactions.slice(-30);
+        g.fillStyle = '#8b96b8'; g.font = '12px Rajdhani, sans-serif';
+        if (pts.length < 2) { g.fillText('Tepki eğrisi (Tracking / Çoklu geçiş modunda isabet % ölçülür)', 16, 65); return; }
+        const maxMs = Math.max(450, ...pts), minMs = Math.min(120, ...pts);
+        g.strokeStyle = '#00f5d4'; g.lineWidth = 2.5; g.beginPath();
+        pts.forEach((ms, i) => {
+          const x = 20 + (i / (pts.length - 1)) * (c.width - 40), y = c.height - 18 - ((ms - minMs) / Math.max(1, maxMs - minMs)) * (c.height - 38);
+          if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+        });
+        g.stroke();
+        g.fillStyle = '#fcee0a';
+        pts.forEach((ms, i) => {
+          const x = 20 + (i / (pts.length - 1)) * (c.width - 40), y = c.height - 18 - ((ms - minMs) / Math.max(1, maxMs - minMs)) * (c.height - 38);
+          g.beginPath(); g.arc(x, y, 3, 0, Math.PI * 2); g.fill();
+        });
+        g.fillStyle = '#8b96b8'; g.fillText(`Son ${pts.length} Vuruş Tepki Eğrisi (ms)`, 12, 16);
+      }
+
+      function drawScatterRadar() {
+        const c = document.getElementById('aimScatterChart'), g = c.getContext('2d');
+        g.clearRect(0, 0, c.width, c.height);
+        const cx = c.width / 2, cy = c.height / 2 + 6, r = 34;
+        g.strokeStyle = 'rgba(255,255,255,0.12)'; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(cx, 20); g.lineTo(cx, c.height - 6); g.moveTo(18, cy); g.lineTo(c.width - 18, cy); g.stroke();
+        g.strokeStyle = 'rgba(0,245,212,0.5)'; g.lineWidth = 1.5; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.stroke();
+        const misses = aim.shotOffsets.filter(s => !s.hit);
+        for (const s of aim.shotOffsets) {
+          const sx = cx + Math.max(-2.1, Math.min(2.1, s.dx)) * r, sy = cy + Math.max(-1.6, Math.min(1.6, s.dy)) * r;
+          g.fillStyle = s.hit ? 'rgba(0, 245, 212, 0.7)' : '#ff2a6d'; g.beginPath(); g.arc(sx, sy, s.hit ? 2.2 : 3, 0, Math.PI * 2); g.fill();
+        }
+        g.fillStyle = '#8b96b8'; g.font = '11px Rajdhani, sans-serif'; g.fillText('Vuruş Dağılım Radarı', 10, 14);
+        let scatterMsg = 'Vuruş Dağılımı: Nişan merkezin çok temiz, kaçırdığın neredeyse yok!';
+        if (misses.length >= 2) {
+          const avgDx = misses.reduce((a, b) => a + b.dx, 0) / misses.length, avgDy = misses.reduce((a, b) => a + b.dy, 0) / misses.length;
+          if (Math.abs(avgDx) > Math.abs(avgDy)) {
+            scatterMsg = avgDx > 0.25 ? 'Radar Analizi: Kaçan atışların hedefin SAĞINDA toplanıyor (Overshoot) — sensini %5 kısmayı dene.'
+              : (avgDx < -0.25 ? 'Radar Analizi: Flicklerin hedefin SOLUNDA kalıyor (Undershoot) — bileğini hedefe tam taşı.' : 'Radar Analizi: Yatay dağılımın dengeli, son mikro düzeltmeye odaklan.');
+          } else {
+            scatterMsg = avgDy > 0.25 ? 'Radar Analizi: Crosshair hedef hizasının ALTINA düşüyor — kafa hizası disiplinini koru.'
+              : (avgDy < -0.25 ? 'Radar Analizi: Atışların hedefin ÜSTÜNDEN geçiyor.' : 'Radar Analizi: Dikey sapman çok düşük, stabil aim!');
+          }
+        }
+        document.getElementById('repScatterTip').textContent = scatterMsg;
+      }
+
+      function closeAimReport() { document.getElementById('aimReportOverlay').classList.add('hidden'); document.getElementById('aimStartOverlay').classList.remove('hidden'); }
+      function renderAimHistory() {
+        const tbody = document.getElementById('aimHistoryBody');
+        if (!state.aimHistory.length) { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Henüz kayıt yok. İlk antrenmanını tamamla!</td></tr>'; return; }
+        tbody.innerHTML = state.aimHistory.map(r => `<tr><td><strong>${r.mode}</strong></td><td style="color:var(--cyan); font-family:var(--font-tech)">${r.score}</td><td>${r.acc}%</td><td>${r.rt ? r.rt + ' ms' : 'Tracking'}</td><td>${r.kps}</td><td><span class="tag-pill">${r.grade}</span></td></tr>`).join('');
+      }
+      function clearAimHistory() { state.aimHistory = []; saveState(); }
+
+      // ================= TAKTİK TAHTASI + SESLİ/YAZILI ANLATIM + TESTLER =================
+      const TACTIC_W = 960, TACTIC_H = 500;
+      const tCanvas = document.getElementById('tacticCanvas'), tctx = tCanvas.getContext('2d');
+      const board = { game: 'cs2', map: 'mirage', tool: 'move', selectedStamp: null, tokens: [], strokes: [], arrows: [], history: [], draggingToken: null, drawingStroke: null, pendingArrow: null, currentPresetSteps: [] };
+      const narrator = { active: false, useVoice: false, stepIdx: -1, timer: null, pulseRaf: null, trVoice: null };
+
+      function refreshVoices() {
+        try { if (!('speechSynthesis' in window)) return; narrator.trVoice = window.speechSynthesis.getVoices().find(v => v.lang.toLowerCase().startsWith('tr')) || null; } catch (e) {}
+      }
+      if ('speechSynthesis' in window) { refreshVoices(); window.speechSynthesis.onvoiceschanged = refreshVoices; }
+
+      function resizeTacticCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        tCanvas.width = TACTIC_W * dpr; tCanvas.height = TACTIC_H * dpr; tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function selectTacticGame(game) {
+        stopBriefing(); board.game = game;
+        document.querySelectorAll('#tacticGameTabs .game-tab').forEach(b => b.classList.toggle('active', b.dataset.game === game));
+        const gData = GAMES_DATA[game];
+        document.getElementById('boardTitle').textContent = `${gData.name.toUpperCase()} TAHTASI`;
+        document.getElementById('boardMapSelect').innerHTML = gData.maps.map(m => `<option value="${m.id}">${m.label}</option>`).join('');
+        board.map = gData.maps[0].id;
+        document.getElementById('boardStampPalette').innerHTML = gData.stamps.map(s => `<button class="tool-btn" data-stamp="${s.id}" style="border-color:${s.color}; color:${s.color}" onclick="CTX.pickStamp('${s.id}')">+ ${s.label}</button>`).join('');
+        renderTacticGuides(game); updatePresetSelect(); loadBoardPreset(); initQuiz(game);
+      }
+
+      function updatePresetSelect() {
+        const presets = GAMES_DATA[board.game].presets[board.map] || [];
+        document.getElementById('boardPresetSelect').innerHTML = presets.length ? presets.map((p, i) => `<option value="${i}">📌 ${p.name}</option>`).join('') + '<option value="empty">⬜ Boş Tahta</option>' : '<option value="">Boş Tahta</option>';
+      }
+      function changeBoardMap() { stopBriefing(); board.map = document.getElementById('boardMapSelect').value; updatePresetSelect(); loadBoardPreset(); }
+      function loadBoardPreset() {
+        stopBriefing();
+        const idx = document.getElementById('boardPresetSelect').value;
+        board.tokens = []; board.strokes = []; board.arrows = []; board.history = []; board.currentPresetSteps = [];
+        const presets = GAMES_DATA[board.game].presets[board.map] || [];
+        if (idx !== '' && idx !== 'empty' && presets[Number(idx)]) {
+          const pr = presets[Number(idx)];
+          board.tokens = pr.tokens.map(t => ({ ...t })); board.arrows = pr.arrows.map(a => ({ ...a })); board.currentPresetSteps = pr.steps || [];
+          document.getElementById('briefingPresetTitle').textContent = pr.name;
+        } else { document.getElementById('briefingPresetTitle').textContent = 'Serbest Çizim Tahtası'; }
+        renderBriefingSteps(); drawTacticBoard();
+      }
+
+      function renderBriefingSteps() {
+        const list = document.getElementById('briefingStepsList');
+        if (!board.currentPresetSteps.length) { list.innerHTML = '<div style="color:var(--muted); padding:10px">Sesli ve yazılı anlatım için yukarıdan bir hazır taktik şablonu seç!</div>'; return; }
+        list.innerHTML = board.currentPresetSteps.map((st, i) => `<div class="brief-step ${narrator.stepIdx === i ? 'active-step' : ''}" onclick="CTX.jumpBriefStep(${i})"><h4>${st.title}</h4><p>${st.text}</p></div>`).join('');
+      }
+      function startBriefing(withVoice) { if (!board.currentPresetSteps.length) return; stopBriefing(); narrator.active = true; narrator.useVoice = withVoice; runBriefStep(0); }
+      function jumpBriefStep(idx) { if (!board.currentPresetSteps.length) return; const wv = narrator.useVoice; stopBriefing(); narrator.active = true; narrator.useVoice = wv; runBriefStep(idx); }
+      function nextBriefStep() {
+        if (!board.currentPresetSteps.length) return;
+        const next = narrator.stepIdx + 1; if (next >= board.currentPresetSteps.length) { stopBriefing(); return; }
+        const wv = narrator.useVoice; clearTimeout(narrator.timer); if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        narrator.active = true; narrator.useVoice = wv; runBriefStep(next);
+      }
+
+      function runBriefStep(idx) {
+        if (!narrator.active || idx >= board.currentPresetSteps.length) {
+          stopBriefing(); document.getElementById('briefingVoiceStatus').textContent = '✅ Taktik anlatımı tamamlandı!'; return;
+        }
+        narrator.stepIdx = idx; renderBriefingSteps(); startPulseLoop();
+        const st = board.currentPresetSteps[idx], statusEl = document.getElementById('briefingVoiceStatus');
+        if (narrator.useVoice && 'speechSynthesis' in window) {
+          try {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(`${st.title}. ${st.text}`);
+            utter.lang = 'tr-TR'; utter.rate = Number(document.getElementById('briefingVoiceRate').value) || 1;
+            if (narrator.trVoice) utter.voice = narrator.trVoice;
+            statusEl.textContent = `🔊 Koç Konuşuyor: ${st.title}`;
+            utter.onend = () => { if (narrator.active && narrator.stepIdx === idx) narrator.timer = setTimeout(() => runBriefStep(idx + 1), 450); };
+            utter.onerror = () => { statusEl.textContent = `📖 Yazılı Akış: ${st.title}`; narrator.timer = setTimeout(() => runBriefStep(idx + 1), 4500); };
+            window.speechSynthesis.speak(utter); return;
+          } catch (e) {}
+        }
+        statusEl.textContent = `📖 Yazılı Anlatım: ${st.title}`;
+        const msPerChar = 52 / (Number(document.getElementById('briefingVoiceRate').value) || 1);
+        narrator.timer = setTimeout(() => { if (narrator.active && narrator.stepIdx === idx) runBriefStep(idx + 1); }, Math.max(3200, st.text.length * msPerChar));
+      }
+
+      function stopBriefing() {
+        narrator.active = false; narrator.stepIdx = -1; clearTimeout(narrator.timer);
+        if (narrator.pulseRaf) cancelAnimationFrame(narrator.pulseRaf); narrator.pulseRaf = null;
+        if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+        document.getElementById('briefingVoiceStatus').textContent = 'Hazır — Adıma tıkla veya Sesli/Yazılı Anlatımı başlat.';
+        renderBriefingSteps(); drawTacticBoard();
+      }
+      function startPulseLoop() {
+        if (narrator.pulseRaf) cancelAnimationFrame(narrator.pulseRaf);
+        const tick = () => { if (narrator.stepIdx < 0) return; drawTacticBoard(); narrator.pulseRaf = requestAnimationFrame(tick); };
+        narrator.pulseRaf = requestAnimationFrame(tick);
+      }
+
+      function setBoardTool(tool) {
+        board.tool = tool; board.selectedStamp = null;
+        document.querySelectorAll('#boardActionTools .tool-btn, #boardStampPalette .tool-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`#boardActionTools .tool-btn[data-tool="${tool}"]`)?.classList.add('active');
+      }
+      function pickStamp(stampId) {
+        board.tool = 'stamp'; board.selectedStamp = GAMES_DATA[board.game].stamps.find(s => s.id === stampId);
+        document.querySelectorAll('#boardActionTools .tool-btn, #boardStampPalette .tool-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`#boardStampPalette .tool-btn[data-stamp="${stampId}"]`)?.classList.add('active');
+      }
+
+      function drawMapBlueprint() {
+        tctx.clearRect(0, 0, TACTIC_W, TACTIC_H);
+        const g = board.game, m = board.map;
+        if (g === 'fc' || g === 'efootball') {
+          for (let i = 0; i < 12; i++) { tctx.fillStyle = i % 2 === 0 ? '#0d3b26' : '#10452d'; tctx.fillRect(i * (TACTIC_W / 12), 0, TACTIC_W / 12, TACTIC_H); }
+          tctx.strokeStyle = 'rgba(255,255,255,0.72)'; tctx.lineWidth = 2.5; tctx.strokeRect(30, 26, TACTIC_W - 60, TACTIC_H - 52);
+          tctx.beginPath(); tctx.moveTo(TACTIC_W / 2, 26); tctx.lineTo(TACTIC_W / 2, TACTIC_H - 26); tctx.stroke();
+          tctx.beginPath(); tctx.arc(TACTIC_W / 2, TACTIC_H / 2, 70, 0, Math.PI * 2); tctx.stroke();
+          tctx.strokeRect(30, 115, 130, 270); tctx.strokeRect(TACTIC_W - 160, 115, 130, 270);
+          tctx.strokeRect(30, 185, 50, 130); tctx.strokeRect(TACTIC_W - 80, 185, 50, 130);
+          tctx.fillStyle = 'rgba(255,255,255,0.18)'; tctx.font = 'bold 16px Orbitron'; tctx.fillText('SOL HÜCUM YÖNÜ →', TACTIC_W / 2 - 90, 50); return;
+        }
+        tctx.fillStyle = '#090e17'; tctx.fillRect(0, 0, TACTIC_W, TACTIC_H);
+        tctx.strokeStyle = 'rgba(255,255,255,0.04)'; tctx.lineWidth = 1;
+        for (let x = 0; x < TACTIC_W; x += 40) { tctx.beginPath(); tctx.moveTo(x, 0); tctx.lineTo(x, TACTIC_H); tctx.stroke(); }
+        for (let y = 0; y < TACTIC_H; y += 40) { tctx.beginPath(); tctx.moveTo(0, y); tctx.lineTo(TACTIC_W, y); tctx.stroke(); }
+        const drawZone = (x, y, w, h, label, col = 'rgba(0,245,212,0.14)') => {
+          tctx.fillStyle = col; tctx.strokeStyle = 'rgba(148,163,184,0.4)'; tctx.lineWidth = 2; tctx.fillRect(x, y, w, h); tctx.strokeRect(x, y, w, h);
+          tctx.fillStyle = '#cbd5e1'; tctx.font = 'bold 13px Orbitron, sans-serif'; tctx.fillText(label, x + 8, y + 20);
+        };
+        if (g === 'cs2' && m === 'mirage') {
+          drawZone(70, 180, 110, 130, 'T SPAWN', 'rgba(251,146,60,0.12)'); drawZone(210, 65, 130, 115, 'A RAMP / PALACE'); drawZone(370, 50, 185, 130, 'A SITE', 'rgba(255,42,109,0.15)');
+          drawZone(315, 215, 195, 100, 'MID / WINDOW'); drawZone(420, 170, 100, 55, 'CONNECTOR'); drawZone(210, 355, 220, 85, 'B APPS');
+          drawZone(475, 340, 175, 110, 'B SITE', 'rgba(255,42,109,0.15)'); drawZone(685, 170, 145, 150, 'CT SPAWN', 'rgba(56,189,248,0.14)');
+        } else if (g === 'cs2' && m === 'inferno') {
+          drawZone(75, 215, 110, 120, 'T SPAWN', 'rgba(251,146,60,0.12)'); drawZone(220, 165, 180, 95, 'TOP MID'); drawZone(270, 75, 200, 75, 'BANANA');
+          drawZone(500, 55, 195, 120, 'B SITE', 'rgba(255,42,109,0.15)'); drawZone(500, 290, 210, 135, 'A SITE / PIT', 'rgba(255,42,109,0.15)'); drawZone(740, 165, 135, 140, 'CT SPAWN', 'rgba(56,189,248,0.14)');
+        } else if (g === 'cs2' && m === 'dust2') {
+          drawZone(180, 395, 140, 80, 'T SPAWN', 'rgba(251,146,60,0.12)'); drawZone(115, 85, 195, 260, 'LONG A'); drawZone(340, 50, 185, 125, 'A SITE / CAT', 'rgba(255,42,109,0.15)');
+          drawZone(370, 205, 175, 145, 'MID DOORS'); drawZone(595, 235, 120, 165, 'B TUNNELS'); drawZone(735, 240, 160, 150, 'B SITE', 'rgba(255,42,109,0.15)'); drawZone(560, 70, 170, 110, 'CT MID', 'rgba(56,189,248,0.14)');
+        } else if (g === 'fortnite' && m === 'endgame') {
+          tctx.strokeStyle = 'rgba(155, 93, 229, 0.85)'; tctx.lineWidth = 3; tctx.beginPath(); tctx.arc(380, 250, 210, 0, Math.PI * 2); tctx.stroke();
+          tctx.strokeStyle = '#ffffff'; tctx.setLineDash([8, 6]); tctx.beginPath(); tctx.arc(610, 190, 120, 0, Math.PI * 2); tctx.stroke(); tctx.setLineDash([]);
+          tctx.fillStyle = '#00f5d4'; tctx.font = 'bold 14px Orbitron'; tctx.fillText('DEADSIDE (SAKIN)', 200, 360);
+          tctx.fillStyle = '#ff2a6d'; tctx.fillText('FRONTSIDE (YOĞUN)', 365, 95); tctx.fillStyle = '#fff'; tctx.fillText('YENİ ALAN', 565, 185);
+        } else if (g === 'fortnite' && m === 'boxfight') {
+          for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) drawZone(290 + c * 125, 70 + r * 120, 125, 120, `GRID ${r + 1}-${c + 1}`);
+        } else if (g === 'minecraft' && m === 'crystal') {
+          drawZone(180, 60, 600, 380, 'OBSIDIAN PVP ARENA', 'rgba(155,93,229,0.08)');
+          tctx.strokeStyle = 'rgba(232,121,249,0.5)'; tctx.setLineDash([6, 6]); tctx.beginPath(); tctx.arc(480, 265, 110, 0, Math.PI * 2); tctx.stroke(); tctx.setLineDash([]);
+          tctx.fillStyle = '#e879f9'; tctx.font = '13px Orbitron'; tctx.fillText('KRİSTAL PATLAMA HASAR ALANI', 370, 395);
+        } else if (g === 'minecraft' && m === 'bridge') {
+          tctx.fillStyle = 'rgba(255,42,109,0.07)'; tctx.fillRect(0, 0, TACTIC_W, TACTIC_H);
+          tctx.fillStyle = '#334155'; tctx.fillRect(100, 210, 760, 80); tctx.strokeStyle = '#94a3b8'; tctx.strokeRect(100, 210, 760, 80);
+          tctx.fillStyle = '#fff'; tctx.font = 'bold 14px Orbitron'; tctx.fillText('DAR KÖPRÜ HATTI (VOID RİSKİ)', 340, 200);
+        }
+      }
+
+      function drawArrowShape(x1, y1, x2, y2, color, highlighted = false) {
+        const headlen = 13, ang = Math.atan2(y2 - y1, x2 - x1);
+        tctx.save();
+        if (highlighted) { tctx.shadowColor = '#fcee0a'; tctx.shadowBlur = 16; }
+        tctx.strokeStyle = highlighted ? '#fcee0a' : color; tctx.fillStyle = highlighted ? '#fcee0a' : color;
+        tctx.lineWidth = highlighted ? 5 : 3.5;
+        tctx.beginPath(); tctx.moveTo(x1, y1); tctx.lineTo(x2, y2); tctx.stroke();
+        tctx.beginPath(); tctx.moveTo(x2, y2);
+        tctx.lineTo(x2 - headlen * Math.cos(ang - Math.PI / 6), y2 - headlen * Math.sin(ang - Math.PI / 6));
+        tctx.lineTo(x2 - headlen * Math.cos(ang + Math.PI / 6), y2 - headlen * Math.sin(ang + Math.PI / 6));
+        tctx.closePath(); tctx.fill(); tctx.restore();
+      }
+
+      function drawTacticBoard() {
+        resizeTacticCanvas(); drawMapBlueprint();
+        const activeStep = narrator.stepIdx >= 0 ? board.currentPresetSteps[narrator.stepIdx] : null;
+        const pulse = (Math.sin(performance.now() / 160) + 1) * 0.5;
+        for (const s of board.strokes) {
+          if (s.pts.length < 2) continue;
+          tctx.strokeStyle = s.color; tctx.lineWidth = 3; tctx.lineCap = 'round';
+          tctx.beginPath(); s.pts.forEach((p, idx) => idx === 0 ? tctx.moveTo(p.x, p.y) : tctx.lineTo(p.x, p.y)); tctx.stroke();
+        }
+        board.arrows.forEach((a, i) => drawArrowShape(a.x1, a.y1, a.x2, a.y2, a.color, activeStep && activeStep.focusArrows?.includes(i)));
+        if (board.pendingArrow) drawArrowShape(board.pendingArrow.x1, board.pendingArrow.y1, board.pendingArrow.x2, board.pendingArrow.y2, board.pendingArrow.color);
+        board.tokens.forEach((t, i) => {
+          const hl = activeStep && activeStep.focusTokens?.includes(i);
+          tctx.save();
+          if (hl) { tctx.strokeStyle = `rgba(252, 238, 10, ${0.45 + pulse * 0.55})`; tctx.lineWidth = 4; tctx.beginPath(); tctx.arc(t.x, t.y, 23 + pulse * 5, 0, Math.PI * 2); tctx.stroke(); }
+          tctx.shadowColor = hl ? '#fcee0a' : 'rgba(0,0,0,0.8)'; tctx.shadowBlur = hl ? 16 : 8;
+          tctx.fillStyle = t.color; tctx.beginPath(); tctx.arc(t.x, t.y, 17, 0, Math.PI * 2); tctx.fill();
+          tctx.lineWidth = 2.5; tctx.strokeStyle = '#06070c'; tctx.stroke();
+          tctx.fillStyle = '#05070c'; tctx.font = 'bold 11px Orbitron, sans-serif'; tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
+          tctx.fillText(t.label, t.x, t.y + 1); tctx.restore();
+        });
+      }
+
+      function getTacticCoords(e) {
+        const rect = tCanvas.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX, cy = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: ((cx - rect.left) / rect.width) * TACTIC_W, y: ((cy - rect.top) / rect.height) * TACTIC_H };
+      }
+      function onBoardDown(e) {
+        e.preventDefault(); const { x, y } = getTacticCoords(e), col = document.getElementById('boardColor').value;
+        if (board.tool === 'move') {
+          for (let i = board.tokens.length - 1; i >= 0; i--) if (Math.hypot(board.tokens[i].x - x, board.tokens[i].y - y) <= 20) { board.draggingToken = board.tokens[i]; return; }
+        } else if (board.tool === 'stamp' && board.selectedStamp) {
+          board.tokens.push({ x, y, label: board.selectedStamp.text, color: board.selectedStamp.color }); board.history.push({ type: 'token' }); drawTacticBoard();
+        } else if (board.tool === 'pen') {
+          board.drawingStroke = { color: col, pts: [{ x, y }] }; board.strokes.push(board.drawingStroke); board.history.push({ type: 'stroke' });
+        } else if (board.tool === 'arrow') { board.pendingArrow = { x1: x, y1: y, x2: x, y2: y, color: col }; }
+      }
+      function onBoardMove(e) {
+        if (!board.draggingToken && !board.drawingStroke && !board.pendingArrow) return;
+        e.preventDefault(); const { x, y } = getTacticCoords(e);
+        if (board.draggingToken) { board.draggingToken.x = x; board.draggingToken.y = y; }
+        else if (board.drawingStroke) board.drawingStroke.pts.push({ x, y });
+        else if (board.pendingArrow) { board.pendingArrow.x2 = x; board.pendingArrow.y2 = y; }
+        drawTacticBoard();
+      }
+      function onBoardUp() {
+        if (board.pendingArrow) {
+          if (Math.hypot(board.pendingArrow.x2 - board.pendingArrow.x1, board.pendingArrow.y2 - board.pendingArrow.y1) > 12) { board.arrows.push(board.pendingArrow); board.history.push({ type: 'arrow' }); }
+          board.pendingArrow = null; drawTacticBoard();
+        }
+        board.draggingToken = null; board.drawingStroke = null;
+      }
+      tCanvas.addEventListener('mousedown', onBoardDown); window.addEventListener('mousemove', onBoardMove); window.addEventListener('mouseup', onBoardUp);
+      tCanvas.addEventListener('touchstart', onBoardDown, { passive: false }); window.addEventListener('touchmove', onBoardMove, { passive: false }); window.addEventListener('touchend', onBoardUp);
+
+      function undoBoard() {
+        const last = board.history.pop(); if (!last) return;
+        if (last.type === 'token') board.tokens.pop(); else if (last.type === 'stroke') board.strokes.pop(); else if (last.type === 'arrow') board.arrows.pop();
+        drawTacticBoard();
+      }
+      function clearBoard() { stopBriefing(); board.tokens = []; board.strokes = []; board.arrows = []; board.history = []; drawTacticBoard(); }
+      function downloadBoard() { const link = document.createElement('a'); link.download = `ctx-${board.game}-taktik.png`; link.href = tCanvas.toDataURL('image/png'); link.click(); }
+      function renderTacticGuides(game) {
+        document.getElementById('tacticGuidesGrid').innerHTML = GAMES_DATA[game].guides.map(g => `<div class="tactic-guide-card"><h3>${g.title}</h3><ul class="tactic-list">${g.items.map(i => `<li>${i}</li>`).join('')}</ul></div>`).join('');
+      }
+
+      // ================= OYUN TAKTİK TESTLERİ =================
+      const quiz = { game: 'cs2', idx: 0, score: 0, answered: false };
+      function initQuiz(game) {
+        quiz.game = game; quiz.idx = 0; quiz.score = 0; quiz.answered = false;
+        document.getElementById('quizGameBadge').textContent = `${GAMES_DATA[game].name.toUpperCase()} TESTİ`;
+        const best = state.quizBest[game];
+        document.getElementById('quizBestBanner').textContent = best !== undefined ? `En İyi Skorun: ${best} / ${GAMES_DATA[game].quiz.length}` : 'En İyi Skor: Henüz çözülmedi';
+        renderQuizQuestion();
+      }
+      function renderQuizQuestion() {
+        const list = GAMES_DATA[quiz.game].quiz, body = document.getElementById('quizBody');
+        if (quiz.idx >= list.length) {
+          const pct = Math.round((quiz.score / list.length) * 100), prev = state.quizBest[quiz.game] || 0;
+          if (quiz.score > prev) state.quizBest[quiz.game] = quiz.score;
+          const xpWin = quiz.score * 15; addXp(xpWin);
+          const badge = pct >= 80 ? '🏆 CTX TAKTİK USTASI!' : (pct >= 60 ? '⚡ İYİ GELİŞİM!' : '📘 REHBERİ TEKRAR İNCELE');
+          document.getElementById('quizProgress').textContent = 'Tamamlandı';
+          document.getElementById('quizBestBanner').textContent = `En İyi Skorun: ${Math.max(prev, quiz.score)} / ${list.length}`;
+          body.innerHTML = `<div style="text-align:center; padding:16px 8px"><div style="font-family:var(--font-tech); font-size:2.4rem; color:var(--yellow)">${quiz.score} / ${list.length}</div><div style="color:var(--cyan); font-weight:700; margin:6px 0">${badge} (%${pct})</div><div style="color:var(--muted); margin-bottom:16px">+${xpWin} CTX XP kazandın!</div><button class="btn-primary" onclick="CTX.initQuiz('${quiz.game}')">🔄 Testi Tekrar Çöz</button></div>`;
+          return;
+        }
+        const item = list[quiz.idx]; quiz.answered = false;
+        document.getElementById('quizProgress').textContent = `Soru ${quiz.idx + 1} / ${list.length}`;
+        body.innerHTML = `<div class="quiz-q">${item.q}</div><div class="quiz-opts">${item.opts.map((o, i) => `<button class="quiz-opt" onclick="CTX.answerQuiz(${i})">${String.fromCharCode(65 + i)}) ${o}</button>`).join('')}</div><div id="quizFeedback"></div>`;
+      }
+      function answerQuiz(optIdx) {
+        if (quiz.answered) return; quiz.answered = true;
+        const item = GAMES_DATA[quiz.game].quiz[quiz.idx];
+        document.querySelectorAll('#quizBody .quiz-opt').forEach((b, i) => { b.disabled = true; if (i === item.ans) b.classList.add('correct'); else if (i === optIdx) b.classList.add('wrong'); });
+        const isCorrect = optIdx === item.ans;
+        if (isCorrect) { quiz.score++; playSound('hit'); } else playSound('miss');
+        document.getElementById('quizFeedback').innerHTML = `<div class="quiz-exp"><strong style="color:${isCorrect ? 'var(--green)' : 'var(--pink)'}">${isCorrect ? '✅ Doğru!' : '❌ Yanlış!'}</strong> ${item.exp}<div style="margin-top:10px"><button class="btn-primary" style="padding:7px 14px; font-size:0.9rem" onclick="CTX.nextQuiz()">Sonraki Soru ➡</button></div></div>`;
+      }
+      function nextQuiz() { quiz.idx++; renderQuizQuestion(); }
+
+      // ================= PRO ARAÇLAR =================
+      function calcSens() {
+        const game = document.getElementById('convGame').value, sens = Math.max(0.01, Number(document.getElementById('convSens').value) || 1), dpi = Math.max(100, Number(document.getElementById('convDpi').value) || 800);
+        let csSens = sens; if (game === 'fortnite') csSens = sens / 3.960396; else if (game === 'ow2') csSens = sens / 3.333333;
+        const cm360 = (360 / (dpi * csSens * 0.022)) * 2.54;
+        document.getElementById('convCm360').textContent = `${cm360.toFixed(1)} cm`;
+        document.getElementById('convCs2').textContent = csSens.toFixed(2);
+        document.getElementById('convFn').textContent = `${(csSens * 3.960396).toFixed(2)}%`;
+        document.getElementById('convOw2').textContent = (csSens * 3.333333).toFixed(2);
+        document.getElementById('convEdpi').textContent = Math.round(dpi * sens);
+      }
+      function applyConvertedSens() {
+        document.getElementById('aimRefGame').value = document.getElementById('convGame').value;
+        document.getElementById('aimSensVal').value = document.getElementById('convSens').value;
+        document.getElementById('aimDpiVal').value = document.getElementById('convDpi').value;
+        syncAimSens(); switchSection('sec-aimlab');
+      }
+
+      const react = { state: 'idle', timer: null, startTs: 0, results: [] };
+      function handleReactionClick() {
+        const box = document.getElementById('reactionBox'), txt = document.getElementById('reactionText'), sub = document.getElementById('reactionSub');
+        if (react.state === 'idle' || react.state === 'done') {
+          if (react.state === 'done') react.results = [];
+          react.state = 'waiting'; box.className = 'reaction-box reaction-wait'; txt.textContent = 'BEKLE... (KIRMIZI)'; sub.textContent = 'Yeşil olduğunda tıkla!';
+          react.timer = setTimeout(() => { react.state = 'go'; react.startTs = performance.now(); box.className = 'reaction-box reaction-go'; txt.textContent = 'ŞİMDİ TIKLA!'; sub.textContent = 'Hemen!'; }, 1200 + Math.random() * 2400);
+        } else if (react.state === 'waiting') {
+          clearTimeout(react.timer); react.state = 'idle'; box.className = 'reaction-box reaction-idle'; txt.textContent = 'ÇOK ERKEN TIKLADIN!'; sub.textContent = 'Tekrar denemek için tıkla.';
+        } else if (react.state === 'go') {
+          const ms = Math.round(performance.now() - react.startTs); react.results.push(ms);
+          const avg = Math.round(react.results.reduce((a, b) => a + b, 0) / react.results.length);
+          document.getElementById('reactRound').textContent = `${react.results.length} / 5`; document.getElementById('reactAvg').textContent = `${avg} ms`;
+          if (react.results.length >= 5) {
+            react.state = 'done'; if (!state.bestReaction || avg < state.bestReaction) { state.bestReaction = avg; addXp(25); }
+            box.className = 'reaction-box reaction-idle'; txt.textContent = `5 TUR ORTALAMA: ${avg} ms`; sub.textContent = avg < 185 ? 'Pro Refleks Seviyesi!' : 'Güzel! Tekrar için tıkla.';
+          } else { react.state = 'idle'; box.className = 'reaction-box reaction-idle'; txt.textContent = `${ms} ms — Süper!`; sub.textContent = 'Sonraki tur için tıkla.'; }
+        }
+      }
+
+      const cps = { active: false, finished: false, clicks: 0, startTs: 0, timer: null };
+      function handleCpsClick() {
+        if (cps.finished) return;
+        if (!cps.active) {
+          cps.active = true; cps.clicks = 0; cps.startTs = performance.now();
+          cps.timer = setInterval(() => {
+            const elapsed = (performance.now() - cps.startTs) / 1000;
+            if (elapsed >= 5) {
+              clearInterval(cps.timer); cps.active = false; cps.finished = true;
+              const finalCps = cps.clicks / 5;
+              document.getElementById('cpsLive').textContent = `${finalCps.toFixed(1)} CPS`;
+              document.getElementById('cpsStatus').textContent = '5 saniye tamamlandı! Sıfırla ile tekrar dene.';
+              let tech = 'Normal Click'; if (finalCps >= 14) tech = 'Butterfly / Drag Pro'; else if (finalCps >= 9.5) tech = 'Jitter / Hızlı Butterfly'; else if (finalCps >= 7) tech = 'Hızlı Normal Click';
+              document.getElementById('cpsStyle').textContent = tech;
+              if (finalCps > state.bestCps) { state.bestCps = finalCps; addXp(20); }
+              return;
+            }
+            document.getElementById('cpsLive').textContent = `${(cps.clicks / Math.max(0.1, elapsed)).toFixed(1)} CPS`;
+            document.getElementById('cpsStatus').textContent = `Kalan: ${(5 - elapsed).toFixed(1)} sn`;
+          }, 60);
+        }
+        cps.clicks++; document.getElementById('cpsClicks').textContent = cps.clicks;
+      }
+      function resetCps() {
+        clearInterval(cps.timer); cps.active = false; cps.finished = false; cps.clicks = 0;
+        document.getElementById('cpsLive').textContent = '0.0 CPS'; document.getElementById('cpsClicks').textContent = '0';
+        document.getElementById('cpsStyle').textContent = '--'; document.getElementById('cpsStatus').textContent = '5 saniyelik test için buraya hızlıca tıkla!';
+      }
+
+      function renderRoutine() {
+        const game = document.getElementById('routineGameSelect').value;
+        document.getElementById('routineList').innerHTML = ROUTINES[game].map(it => {
+          const done = !!state.routineDone[it.id];
+          return `<div class="routine-item ${done ? 'done' : ''}"><label style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1"><input type="checkbox" ${done ? 'checked' : ''} onchange="CTX.toggleRoutine('${it.id}', ${it.xp})" /><span>${it.text}</span></label><span class="tag-pill">+${it.xp} XP</span></div>`;
+        }).join('');
+      }
+      function toggleRoutine(id, xp) {
+        if (!state.routineDone[id]) { state.routineDone[id] = true; addXp(xp); } else { delete state.routineDone[id]; saveState(); }
+        renderRoutine();
+      }
+
+      // ================= BAŞLATMA =================
+      window.CTX = {
+        switchAuthTab, unlockRegisterGate, handleRegister, handleLogin, logout,
+        switchSection, openTacticGame,
+        toggleCrosshairDrawer, updateCrosshair,
+        syncAimSens, startAimSession, resumePointerLock, finishAimSession, closeAimReport, clearAimHistory,
+        selectTacticGame, changeBoardMap, loadBoardPreset, setBoardTool, pickStamp, undoBoard, clearBoard, downloadBoard,
+        startBriefing, jumpBriefStep, nextBriefStep, stopBriefing,
+        initQuiz, answerQuiz, nextQuiz,
+        calcSens, applyConvertedSens, handleReactionClick, handleCpsClick, resetCps, renderRoutine, toggleRoutine
+      };
+
+      loadAccounts();
+      try {
+        const savedSession = sessionStorage.getItem(SESSION_KEY);
+        if (savedSession && accounts[savedSession]) {
+          enterAcademy(savedSession);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
